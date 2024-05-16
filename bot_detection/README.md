@@ -7,7 +7,9 @@ This project contains a bot detection system that uses a conformal predictor to 
 This class is used to calibrate a model and make predictions. It has the following methods:
 
 `__init__`: Initializes the ConformalPredictor object.
+
 `calibrate`: Calibrates the model using the provided calibration samples and alpha value.
+
 `conformal_predict`: Makes predictions on the provided test samples.
 
 
