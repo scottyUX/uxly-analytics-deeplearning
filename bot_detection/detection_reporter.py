@@ -77,3 +77,8 @@ def report_detection_performance(metrics_list, hyperparameters=None):
             line += f'{value:.0f},' if label in int_labels else f'{value:.4f},'
         print(line[:-1])
     return
+
+def get_rows():
+    global __labels
+    hyperparameters = ['Conformal alpha', 'Calibration Samples', 'Binary threshold']
+    return hyperparameters + __labels

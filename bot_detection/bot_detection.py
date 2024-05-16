@@ -42,11 +42,13 @@ class BotDetection(object):
         self.conformal_predictor.calibrate(self.model, calibration_samples, alpha)
         return self.conformal_predictor.conformal_predict(test_x)
 
-    def run(self):
-        # Set hyperparameters
-        num_calibration_samples = 1000
-        alpha = 0.03
-        binary_threshold = 0.5
+    def run(
+            self, 
+            num_calibration_samples=1000, 
+            alpha=0.03, 
+            binary_threshold=0.5,
+            print_results=True,
+        ):
         hyperparameters = (num_calibration_samples, alpha, binary_threshold)
         # Load data
         data_handler = BotDetectionDataHandler(num_calibration_samples)
@@ -64,5 +66,6 @@ class BotDetection(object):
         # Report detection performance with initial hyperparameters
         hyperparameters += (self.conformal_predictor.conformal_threshold,)
         metrics_list = [scores, conformal_scores]
-        report_detection_performance(metrics_list, hyperparameters)
-        return
+        if print_results:
+            report_detection_performance(metrics_list, hyperparameters)
+        return metrics_list, hyperparameters
