@@ -30,7 +30,7 @@ def get_n_claimers(handler: GraphQueryHandler, n = 50, name = 'airdrop1', sample
 
 def save_degree_transactions(handler: GraphQueryHandler, addresses, contracts, degree = 'degree_zero'):
     received_transactions, sent_transactions = \
-        handler.get_token_transactions(addresses, contracts)
+        handler.get_wallet_transactions(addresses, contracts)
     json.dump(received_transactions, open(f'{DEGEN_AIRDROP_FOLDER}/network/{degree}_received.json', 'w'))
     json.dump(sent_transactions, open(f'{DEGEN_AIRDROP_FOLDER}/network/{degree}_sent.json', 'w'))
 

@@ -13,6 +13,19 @@ class GraphQueryHandler:
             self.__api_keys = json.loads(file.read())
         return self.__api_keys
     
+    def query_wallet_transactions(self, address, contract_addresses, chain = 'eth', order = 'DESC'):
+        params = { 'chain': chain, 'order': order,  'address': address, 'contract_addresses': contract_addresses }
+        transactions = []
+        while ck.CURSOR not in params or params[ck.CURSOR]:
+            page = evm_api.transaction.get_wallet_transactions(
+                api_key=self.__api_keys[ck.MORALIS], 
+                params=params,
+            )
+            transactions.extend(page[ck.RESULT])
+            params[ck.CURSOR] = page[ck.CURSOR]
+            break
+        return transactions
+        
     
     def query_token_transactions(self, address, contract_addresses, chain = 'eth', order = 'DESC'):
         params = { 'chain': chain, 'order': order,  'address': address, 'contract_addresses': contract_addresses }
@@ -54,6 +67,25 @@ class GraphQueryHandler:
             except:
                 print(f'Error querying stats for {address}')
         return pd.DataFrame(stats)
+
+    def get_wallet_transactions(self, addresses, contract_addresses):
+        received_transactions = {}
+        sent_transactions = {}
+        i = 0
+        for address in addresses:
+            i += 1
+            print(f'Querying tnx for {i}/{len(addresses)} adresses', end='\r')
+            tnxs = self.query_wallet_transactions(address, contract_addresses)
+            for tnx in tnxs:
+                if tnx['to_address'] == address:
+                    if address not in received_transactions:
+                        received_transactions[address] = []
+                    received_transactions[address].append(tnx)
+                if tnx['from_address'] == address:
+                    if address not in sent_transactions:
+                        sent_transactions[address] = []
+                    sent_transactions[address].append(tnx)
+        return received_transactions, sent_transactions
 
     def get_token_transactions(self, addresses, contract_addresses):
         received_transactions = {}
