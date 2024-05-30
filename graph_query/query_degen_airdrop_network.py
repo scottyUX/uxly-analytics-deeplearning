@@ -55,7 +55,7 @@ def main():
     claimers_n = get_n_claimers(handler, n, name, sample = False)
     degree_zero_addresses = claimers_n['wallet_address'].values
     contracts = ['0x4ed4e862860bed51a9570b96d89af5e1b0efefed']
-    degree = 'degree_one_parent'
+    degree = 'degree_zero'
     senders, receivers = process_degree(handler, degree_zero_addresses, contracts, degree, save = True)
     # senders, receivers = read_degree_transactions(degree = degree)
     # senders, receivers = senders[:k], receivers[:k]
