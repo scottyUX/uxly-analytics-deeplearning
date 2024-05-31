@@ -93,3 +93,17 @@ class CustomKeys:
     ERC20_CODE = 'erc20_code'
     ERC20_FUNCTION = 'erc20_function'
     IS_ERC20 = 'is_erc20'
+
+    CHAIN = 'chain'
+    ORDER = 'order'
+    ADDRESS = 'address'
+    CONTRACT_ADDRESSES = 'contract_addresses'
+    TOTAL = 'total'
+    NFTS = 'nfts'
+    COLLECTIONS = 'collections'
+    TRANSACTIONS = 'transactions'
+    NFT_TRANSFERS = 'nft_transfers'
+    TOKEN_TRANSFERS = 'token_transfers'
+
+    CLAIMED = 'claimed'
+    WALLET_ADDRESS = 'wallet_address'
