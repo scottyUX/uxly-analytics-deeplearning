@@ -4,7 +4,7 @@ import json
 from utils.costum_keys import CustomKeys as ck
 
 class GraphQueryHandler:
-    def __init__(self, path_prefix: str = ''):
+    def __init__(self, path_prefix = ''):
         self.__path_prefix = path_prefix
         self.__api_keys =  self.__read_api_key()
 
@@ -27,14 +27,18 @@ class GraphQueryHandler:
             ck.CONTRACT_ADDRESSES: contract_addresses,
         }
         transactions = []
-        while ck.CURSOR not in params or params[ck.CURSOR]:
-            page = evm_api.transaction.get_wallet_transactions(
-                api_key=self.__api_keys[ck.MORALIS], 
-                params=params,
-            )
-            transactions.extend(page[ck.RESULT])
-            params[ck.CURSOR] = page[ck.CURSOR]
-            break
+        try:
+            while ck.CURSOR not in params or params[ck.CURSOR]:
+                page = evm_api.transaction.get_wallet_transactions(
+                    api_key=self.__api_keys[ck.MORALIS], 
+                    params=params,
+                )
+                transactions.extend(page[ck.RESULT])
+                params[ck.CURSOR] = page[ck.CURSOR]
+                break
+        except Exception as e:
+            print(e)
+            print(f'Error querying transactions for {address}')
         return transactions
 
     def get_wallet_stats(self, address: str, chain: str = "eth"):
@@ -56,13 +60,16 @@ class GraphQueryHandler:
                 rd = {
                     ck.ADDRESS: address,
                     ck.NFTS: int(r[ck.NFTS]), 
-                    ck.COLLECTIONS: int(r[ck.COLLECTIONS][ck.TOTAL]),
+                    ck.COLLECTIONS: int(r[ck.COLLECTIONS]),
                     ck.TRANSACTIONS: int(r[ck.TRANSACTIONS][ck.TOTAL]),
                     ck.NFT_TRANSFERS: int(r[ck.NFT_TRANSFERS][ck.TOTAL]),
                     ck.TOKEN_TRANSFERS: int(r[ck.TOKEN_TRANSFERS][ck.TOTAL]),
                 }
                 stats.append(rd)
-            except:
+            except KeyboardInterrupt:
+                break
+            except Exception as e:
+                print(e)
                 print(f'Error querying stats for {address}')
         return pd.DataFrame(stats)
 
