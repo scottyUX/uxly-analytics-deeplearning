@@ -1,5 +1,6 @@
 from utils.custom_keys import CustomKeys as ck
 
+
 class MoralisQueryParameters(object):
 
     def __init__(
@@ -10,28 +11,26 @@ class MoralisQueryParameters(object):
             chain: str = 'eth',
             order: str = 'DESC',
         ):
-        self.__address = address
-        self.__from_date = from_date
-        self.__to_date = to_date
-        self.__chain = chain
-        self.__order = order
-
-    def get_address(self):
-        return self.__address
+        self.address = address
+        self.from_date = from_date
+        self.to_date = to_date
+        self.chain = chain
+        self.order = order
 
     def to_dict(self):
         parameters = {
-            ck.CHAIN: self.__chain, 
-            ck.ORDER: self.__order, 
-            ck.ADDRESS: self.__address,
+            ck.CHAIN: self.chain, 
+            ck.ORDER: self.order, 
+            ck.ADDRESS: self.address,
         }
-        if self.__from_date != '':
-            parameters[ck.FROM_DATE] = self.__from_date
-        if self.__to_date != '':
-            parameters[ck.TO_DATE] = self.__to_date
+        if self.from_date != '':
+            parameters[ck.FROM_DATE] = self.from_date
+        if self.to_date != '':
+            parameters[ck.TO_DATE] = self.to_date
 
         return parameters
-    
+
+
 class MoralisStatsQueryParameters(MoralisQueryParameters):
 
     def __init__(
@@ -49,7 +48,8 @@ class MoralisStatsQueryParameters(MoralisQueryParameters):
             chain,
             order,
         )
-    
+
+
 class MoralisTransactionsQueryParameters(MoralisQueryParameters):
 
     def __init__(
@@ -63,26 +63,19 @@ class MoralisTransactionsQueryParameters(MoralisQueryParameters):
             cursor: str = '0',
         ):
         super().__init__(
-            address, 
-            contract_addresses, 
+            address,  
             from_date,
             to_date,
             chain,
             order,
         )
-        self.__contract_addresses = contract_addresses
-        self.__cursor = cursor
+        self.contract_addresses = contract_addresses
+        self.cursor = cursor
 
     def to_dict(self):
         parameters = super().to_dict()
-        if self.__contract_addresses:
-            parameters[ck.CONTRACT_ADDRESSES] = self.__contract_addresses
-        if self.__cursor != '':
-            parameters[ck.CURSOR] = self.__cursor
+        if self.contract_addresses:
+            parameters[ck.CONTRACT_ADDRESSES] = self.contract_addresses
+        if self.cursor != '0':
+            parameters[ck.CURSOR] = self.cursor
         return parameters
-    
-    def get_cursor(self):
-        return self.__cursor
-    
-    def update_cursor(self, cursor: str):
-        self.__cursor = cursor

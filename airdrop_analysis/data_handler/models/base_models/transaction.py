@@ -1,3 +1,5 @@
+from typing import Optional
+
 from utils.custom_keys import CustomKeys as ck
 
 
@@ -34,17 +36,17 @@ class Transaction(object):
             nonce: int,
             transaction_index: int,
             from_address: str,
-            from_address_label: str | None,
+            from_address_label: Optional[str],
             to_address: str,
-            to_address_label: str | None,
+            to_address_label: Optional[str],
             value: int,
             gas: int,
             gas_price: int,
             input: str,
             receipt_cumulative_gas_used: int,
             receipt_gas_used: int,
-            receipt_contract_address: str | None,
-            receipt_root: str | None,
+            receipt_contract_address: Optional[str],
+            receipt_root: Optional[str],
             receipt_status: str,
             block_timestamp: str,
             block_number: int,

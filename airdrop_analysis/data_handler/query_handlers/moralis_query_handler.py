@@ -16,7 +16,7 @@ class MoralisQueryHandler(object):
         with open(api_keys_path, 'r') as file:
             self.__api_key = json.loads(file.read())
         return self.__api_key[ck.MORALIS]
-    
+
     def __query_wallet_transactions_page(
             self, 
             params: MoralisTransactionsQueryParameters,
@@ -31,25 +31,28 @@ class MoralisQueryHandler(object):
             self, 
             params: MoralisTransactionsQueryParameters,
         ):
-        address = params.get_address()
+        address = params.address
         transactions = []
         try:
-            while params.get_cursor() is not None:
+            while params.cursor is not None:
                 tnxs, cursor = self.__query_wallet_transactions_page(params)
                 transactions.extend(tnxs)
-                params.update_cursor(cursor)
+                params.cursor = cursor
                 cnt = len(transactions)
                 s = f'Queryied {cnt} transactions for {address}.'
-                s += f' Querying next page...'
+                if params.cursor is not None:
+                    s += f' Querying next page...'
+                else:
+                    s += ' Done.' + ' ' * 25
                 print(s, end='\r')
         except Exception as e:
             if 'Reason: Internal Server Error' in str(e):
                 print(f'Internal Server Error querying tnxs for {address}')
             else:
                 print(e)
-        return transactions, params.get_cursor()
+        return transactions, params.cursor
     
-    def get_wallet_stats(
+    def query_wallet_stats(
             self, 
             params: MoralisStatsQueryParameters,
             ):
@@ -60,5 +63,5 @@ class MoralisQueryHandler(object):
             )
         except Exception as e:
             print(e)
-            print(f'Error getting stats for {params.get_address()}')
+            print(f'Error getting stats for {params.address}')
             return {}

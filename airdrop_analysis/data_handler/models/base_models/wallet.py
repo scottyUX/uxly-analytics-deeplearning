@@ -16,7 +16,7 @@ class WalletStats(object):
             token_transfer_count = int(response[ck.TOKEN_TRANSFERS][ck.TOTAL]),
         )
 
-    def init(
+    def __init__(
             self, 
             address: str,
             chain: str,

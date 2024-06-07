@@ -35,9 +35,9 @@ class TransactionHistory(object):
         return t
     
     def __get_sender_addresses(self):
-        received_transactions = self.get_received_transactions()
+        received_transactions = self.__get_received_transactions()
         return list(set([tx.from_address for tx in received_transactions]))
     
     def __get_receiver_addresses(self):
-        sent_transactions = self.get_sent_transactions()
+        sent_transactions = self.__get_sent_transactions()
         return list(set([tx.to_address for tx in sent_transactions]))
