@@ -2,8 +2,10 @@ from utils.custom_keys import CustomKeys as ck
 
 class WalletStats(object):
 
-    def from_moralis_response(response: dict):
+    def from_moralis_response(address: str, chain: str, response: dict):
         return WalletStats(
+            address = address,
+            chain = chain,
             nft_count = int(response[ck.NFTS]),
             collection_count = int(response[ck.COLLECTIONS]),
             transaction_count = int(response[ck.TRANSACTIONS][ck.TOTAL]),
@@ -13,12 +15,16 @@ class WalletStats(object):
 
     def init(
             self, 
+            address: str,
+            chain: str,
             nft_count: int,
             collection_count: int,
             transaction_count: int,
             nft_transfer_count: int,
             token_transfer_count: int,
             ):
+        self.address = address
+        self.chain = chain
         self.nft_count = nft_count
         self.collection_count = collection_count
         self.transaction_count = transaction_count
@@ -27,6 +33,8 @@ class WalletStats(object):
 
     def to_dict(self):
         return {
+            ck.ADDRESS: self.address,
+            ck.CHAIN: self.chain,
             ck.NFTS: self.nft_count,
             ck.COLLECTIONS: self.collection_count,
             ck.TRANSACTIONS: self.transaction_count,
