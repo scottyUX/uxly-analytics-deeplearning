@@ -1,7 +1,11 @@
 
 class CustomKeys:
+    # Paths
+    API_KEYS_PATH = 'api_keys_path'
+
     # API keys
     MORALIS = 'moralis'
+
     # Query parameters
     CHAIN = 'chain'
     ORDER = 'order'

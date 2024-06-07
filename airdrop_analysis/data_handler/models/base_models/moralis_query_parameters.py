@@ -16,6 +16,8 @@ class MoralisQueryParameters(object):
         self.__chain = chain
         self.__order = order
 
+    def get_address(self):
+        return self.__address
 
     def to_dict(self):
         parameters = {
@@ -58,6 +60,7 @@ class MoralisTransactionsQueryParameters(MoralisQueryParameters):
             to_date: str = '',
             chain: str = 'eth',
             order: str = 'DESC',
+            cursor: str = '0',
         ):
         super().__init__(
             address, 
@@ -68,9 +71,18 @@ class MoralisTransactionsQueryParameters(MoralisQueryParameters):
             order,
         )
         self.__contract_addresses = contract_addresses
+        self.__cursor = cursor
 
     def to_dict(self):
         parameters = super().to_dict()
         if self.__contract_addresses:
             parameters[ck.CONTRACT_ADDRESSES] = self.__contract_addresses
+        if self.__cursor != '':
+            parameters[ck.CURSOR] = self.__cursor
         return parameters
+    
+    def get_cursor(self):
+        return self.__cursor
+    
+    def update_cursor(self, cursor: str):
+        self.__cursor = cursor
