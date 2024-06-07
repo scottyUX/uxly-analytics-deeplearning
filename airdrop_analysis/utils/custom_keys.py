@@ -11,3 +11,11 @@ class CustomKeys:
     TO_DATE = 'to_date'
     CURSOR = 'cursor'
     RESULT = 'result'
+
+    # Wallet stats
+    NFTS = 'nfts'
+    COLLECTIONS = 'collections'
+    TRANSACTIONS = 'transactions'
+    NFT_TRANSFERS = 'nft_transfers'
+    TOKEN_TRANSFERS = 'token_transfers'
+    TOTAL = 'total'
