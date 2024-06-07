@@ -1,4 +1,7 @@
+from data_handler.models.base_models.transaction_history \
+    import TransactionHistory
 from utils.custom_keys import CustomKeys as ck
+
 
 class WalletStats(object):
 
@@ -41,3 +44,34 @@ class WalletStats(object):
             ck.NFT_TRANSFERS: self.nft_transfer_count,
             ck.TOKEN_TRANSFERS: self.token_transfer_count,
         }
+
+
+class Wallet(WalletStats):
+
+    def __init__(
+            self,
+            stats: WalletStats,
+            transaction_history: TransactionHistory,
+    ):
+        super().__init__(
+            stats.address,
+            stats.chain,
+            stats.nft_count,
+            stats.collection_count,
+            stats.transaction_count,
+            stats.nft_transfer_count,
+            stats.token_transfer_count,
+        )
+        self.__transaction_history = transaction_history
+
+    def get_received_transactions(self):
+        return self.__transaction_history.received_transactions
+    
+    def get_sent_transactions(self):
+        return self.__transaction_history.sent_transactions
+    
+    def get_sender_addresses_to_this_address(self):
+        return self.__transaction_history.sender_addresses
+    
+    def get_receiver_addresses_from_this_address(self):
+        return self.__transaction_history.receiver_addresses
