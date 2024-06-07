@@ -2,14 +2,22 @@
 class CustomKeys:
     # Paths
     API_KEYS_PATH = 'api_keys_path'
+    AWS_ACCESS_KEYS_PATH = 'aws_access_keys_path'
+    CLAIMERS_PATH = 'claimers_path'
+    TABLES_FILE_PATH = 'tables_file_path'
 
     # API keys
     MORALIS = 'moralis'
+    DYNAMODB = 'dynamodb'
+    ACCESS_KEY_ID = 'Access key ID'
+    SECRET_ACCESS_KEY = 'Secret access key'
+    AWS_REGION = 'us-east-1'
 
     # Query parameters
     CHAIN = 'chain'
     ORDER = 'order'
     ADDRESS = 'address'
+    WALLET_ADDRESS = 'wallet_address'
     CONTRACT_ADDRESSES = 'contract_addresses'
     FROM_DATE = 'from_date'
     TO_DATE = 'to_date'
@@ -18,10 +26,15 @@ class CustomKeys:
 
     # Wallet stats
     NFTS = 'nfts'
+    NFT_COUNT = 'nft_count'
     COLLECTIONS = 'collections'
+    COLLECTION_COUNT = 'collection_count'
     TRANSACTIONS = 'transactions'
+    TRANSACTION_COUNT = 'transaction_count'
     NFT_TRANSFERS = 'nft_transfers'
+    NFT_TRANSFER_COUNT = 'nft_transfer_count'
     TOKEN_TRANSFERS = 'token_transfers'
+    TOKEN_TRANSFER_COUNT = 'token_transfer_count'
     TOTAL = 'total'
 
     # Transaction
@@ -46,3 +59,11 @@ class CustomKeys:
     BLOCK_HASH = 'block_hash'
     TRANSFER_INDEX = 'transfer_index'
     TRANSACTION_FEE = 'transaction_fee'
+
+    # DynamoDB
+    ITEM = 'Item'
+    TABLE_NAME = 'TableName'
+    AIRDROPS = 'airdrops'
+    DEGEN = 'degen'
+    STATS_TABLE = 'stats_table'
+    TRANSACTIONS_TABLE = 'transactions_table'

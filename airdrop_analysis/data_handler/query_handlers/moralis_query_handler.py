@@ -1,10 +1,10 @@
 import json
 import moralis
 
-from data_handler.models.base_models.moralis_query_parameters \
-    import MoralisTransactionsQueryParameters
-from data_handler.models.base_models.moralis_query_parameters \
-    import MoralisStatsQueryParameters
+from data_handler.models.base_models.query_parameters \
+    import TransactionsQueryParameters
+from data_handler.models.base_models.query_parameters \
+    import StatsQueryParameters
 from utils.custom_keys import CustomKeys as ck
 
 
@@ -19,7 +19,7 @@ class MoralisQueryHandler(object):
 
     def __query_wallet_transactions_page(
             self, 
-            params: MoralisTransactionsQueryParameters,
+            params: TransactionsQueryParameters,
         ):
         page = moralis.evm_api.transaction.get_wallet_transactions(
             api_key=self.__api_key, 
@@ -29,7 +29,7 @@ class MoralisQueryHandler(object):
     
     def query_wallet_transactions(
             self, 
-            params: MoralisTransactionsQueryParameters,
+            params: TransactionsQueryParameters,
         ):
         address = params.address
         transactions = []
@@ -54,7 +54,7 @@ class MoralisQueryHandler(object):
     
     def query_wallet_stats(
             self, 
-            params: MoralisStatsQueryParameters,
+            params: StatsQueryParameters,
             ):
         try:
             return moralis.evm_api.wallets.get_wallet_stats(
