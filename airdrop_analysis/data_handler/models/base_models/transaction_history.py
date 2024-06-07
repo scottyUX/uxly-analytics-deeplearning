@@ -9,6 +9,7 @@ class TransactionHistory(object):
             transactions: list,
             from_date: str,
             to_date: str,
+            contract_addresses: list,
             last_cursor: str,
         ):
         self.address = address
@@ -19,6 +20,7 @@ class TransactionHistory(object):
         self.transaction_count = len(transactions)
         self.from_date = from_date
         self.to_date = to_date
+        self.contract_addresses = contract_addresses
         self.received_transactions = self.__get_received_transactions()
         self.sent_transactions = self.__get_sent_transactions()
         self.sender_addresses = self.__get_sender_addresses()
