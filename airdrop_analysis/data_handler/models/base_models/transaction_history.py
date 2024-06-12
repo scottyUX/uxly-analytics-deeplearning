@@ -69,6 +69,7 @@ class TransactionHistory(object):
             ck.ADDRESS: self.address,
             ck.CHAIN: self.chain,
             ck.TRANSACTIONS: [tx.to_dict() for tx in self.transactions],
+            ck.TRANSACTION_COUNT: self.transaction_count,
             ck.FROM_DATE: self.from_date,
             ck.TO_DATE: self.to_date,
             ck.CONTRACT_ADDRESSES: self.contract_addresses,
