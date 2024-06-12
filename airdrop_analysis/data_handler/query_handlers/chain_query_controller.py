@@ -52,4 +52,4 @@ class ChainQueryController():
     def get_wallet(self, params: WalletQueryParameters) -> Wallet:
         stats = self.get_wallet_stats(params.to_stats_query())
         history = self.get_wallet_transaction_history(params)
-        return Wallet(stats, history)
+        return Wallet(params.address, history, stats)

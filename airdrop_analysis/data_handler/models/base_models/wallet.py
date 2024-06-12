@@ -60,37 +60,21 @@ class WalletStats(object):
         }
 
 
-class Wallet(WalletStats):
+class Wallet(object):
 
     def __init__(
             self,
-            stats: WalletStats,
+            address: str,
             transaction_history: TransactionHistory,
+            stats: WalletStats = None,
     ):
-        super().__init__(
-            stats.address,
-            stats.chain,
-            stats.nft_count,
-            stats.collection_count,
-            stats.transaction_count,
-            stats.nft_transfer_count,
-            stats.token_transfer_count,
-        )
-        self.__transaction_history = transaction_history
+        self.address = address
+        self.stats = stats
+        self.transaction_history = transaction_history
 
-    def get_received_transactions(self):
-        return self.__transaction_history.received_transactions
-    
-    def get_sent_transactions(self):
-        return self.__transaction_history.sent_transactions
-    
-    def get_sender_addresses_to_this_address(self):
-        return self.__transaction_history.sender_addresses
-    
-    def get_receiver_addresses_from_this_address(self):
-        return self.__transaction_history.receiver_addresses
-    
     def to_dict(self):
-        d = super().to_dict()
-        d[ck.TRANSACTIONS] = self.__transaction_history.to_dict()
+        d = { ck.ADDRESS: self.address }
+        d[ck.TRANSACTIONS] = self.transaction_history.to_dict()
+        if self.stats is not None:
+            d[ck.STATS] = self.stats.to_dict()
         return d

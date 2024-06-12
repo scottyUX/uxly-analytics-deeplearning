@@ -65,5 +65,6 @@ class CustomKeys:
     TABLE_NAME = 'TableName'
     AIRDROPS = 'airdrops'
     DEGEN = 'degen'
+    STATS = 'stats'
     STATS_TABLE = 'stats_table'
     TRANSACTIONS_TABLE = 'transactions_table'
