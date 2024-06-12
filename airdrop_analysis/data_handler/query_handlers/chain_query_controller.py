@@ -17,7 +17,9 @@ class ChainQueryController():
         self.__dynamodb_handler = DynamoDBQueryHandler(access_key_path)
 
     def get_wallet_stats(self, params: StatsQueryParameters) -> WalletStats:
-        stats = self.__dynamodb_handler.get_wallet_stats(params)
+        stats = None
+        if params.cached_first:
+            stats = self.__dynamodb_handler.get_wallet_stats(params)
         if stats is not None:
             return stats
         response = self.__moralis_handler.query_wallet_stats(params)
@@ -31,7 +33,9 @@ class ChainQueryController():
             self,
             params: TransactionsQueryParameters,
         ) -> TransactionHistory:
-        history = self.__dynamodb_handler.get_wallet_transactions(params)
+        history = None
+        if params.cached_first:
+            history = self.__dynamodb_handler.get_wallet_transactions(params)
         if history is not None:
             return history
         tnxs, cursor = self.__moralis_handler.query_wallet_transactions(params)

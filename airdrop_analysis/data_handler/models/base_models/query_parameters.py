@@ -7,6 +7,7 @@ class QueryParameters(object):
             self,
             address: str,  
             table_name: str,
+            cached_first: bool = True,
             from_date: str = '',
             to_date: str = '',
             chain: str = 'eth',
@@ -14,6 +15,7 @@ class QueryParameters(object):
         ):
         self.address = address
         self.table_name = table_name
+        self.cached_first = cached_first
         self.from_date = from_date
         self.to_date = to_date
         self.chain = chain
@@ -38,6 +40,7 @@ class StatsQueryParameters(QueryParameters):
             self,
             address: str, 
             table_name: str,
+            cached_first: bool = True,
             from_date: str = '',
             to_date: str = '',
             chain: str = 'eth',
@@ -46,6 +49,7 @@ class StatsQueryParameters(QueryParameters):
         super().__init__(
             address,  
             table_name,
+            cached_first,
             from_date,
             to_date,
             chain,
@@ -59,6 +63,7 @@ class TransactionsQueryParameters(QueryParameters):
             self,
             address: str, 
             table_name: str,
+            cached_first: bool = True,
             contract_addresses: list = [], 
             from_date: str = '',
             to_date: str = '',
@@ -69,6 +74,7 @@ class TransactionsQueryParameters(QueryParameters):
         super().__init__(
             address,
             table_name,
+            cached_first,
             from_date,
             to_date,
             chain,
@@ -93,6 +99,7 @@ class WalletQueryParameters(TransactionsQueryParameters):
             address: str, 
             stats_table_name: str,
             transaction_table_name: str,
+            cached_first: bool = True,
             contract_addresses: list = [], 
             from_date: str = '',
             to_date: str = '',
@@ -103,6 +110,7 @@ class WalletQueryParameters(TransactionsQueryParameters):
         super().__init__(
             address,
             transaction_table_name,
+            cached_first,
             contract_addresses,
             from_date,
             to_date,
@@ -121,6 +129,7 @@ class WalletQueryParameters(TransactionsQueryParameters):
         return StatsQueryParameters(
             self.address,
             self.stats_table_name,
+            self.cached_first,
             self.from_date,
             self.to_date,
             self.chain,
