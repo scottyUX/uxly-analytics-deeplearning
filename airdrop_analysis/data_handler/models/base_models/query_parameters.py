@@ -89,8 +89,9 @@ class WalletQueryParameters(TransactionsQueryParameters):
     def __init__(
             self,
             address: str, 
-            stats_table_name: str,
             transaction_table_name: str,
+            include_stats: bool = False,
+            stats_table_name: str = '',
             cached_first: bool = True,
             contract_addresses: list = [], 
             from_date: str = '',
@@ -110,6 +111,7 @@ class WalletQueryParameters(TransactionsQueryParameters):
             order,
             cursor,
         )
+        self.include_stats = include_stats
         self.stats_table_name = stats_table_name
         self.transaction_table_name = transaction_table_name
 
