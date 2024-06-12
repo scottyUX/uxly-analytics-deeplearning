@@ -57,6 +57,7 @@ class TransactionsQueryParameters(QueryParameters):
             to_date: str = '',
             chain: str = 'eth',
             order: str = 'DESC',
+            limit: int = 300,
             cursor: str = '0',
         ):
         super().__init__(
@@ -69,15 +70,17 @@ class TransactionsQueryParameters(QueryParameters):
         self.from_date = from_date
         self.to_date = to_date
         self.contract_addresses = contract_addresses
+        self.limit = limit
         self.cursor = cursor
 
     def to_dict(self):
         parameters = super().to_dict()
+        parameters[ck.LIMIT] = self.limit
         if self.from_date != '':
             parameters[ck.FROM_DATE] = self.from_date
         if self.to_date != '':
             parameters[ck.TO_DATE] = self.to_date
-        if self.contract_addresses:
+        if (self.contract_addresses):
             parameters[ck.CONTRACT_ADDRESSES] = self.contract_addresses
         if self.cursor != '0':
             parameters[ck.CURSOR] = self.cursor

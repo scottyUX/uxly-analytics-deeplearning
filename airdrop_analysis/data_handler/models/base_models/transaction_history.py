@@ -37,7 +37,7 @@ class TransactionHistory(object):
         self.transactions = transactions
         self.last_cursor = last_cursor
         self.transaction_count = len(transactions)
-        if isinstance(transactions[0], dict):
+        if len(transactions) > 0 and isinstance(transactions[0], dict):
             transactions = [Transaction.from_dict(tx) for tx in transactions]
         self.transactions = transactions
         self.from_date = from_date
