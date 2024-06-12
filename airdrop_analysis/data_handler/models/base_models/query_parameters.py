@@ -8,16 +8,12 @@ class QueryParameters(object):
             address: str,  
             table_name: str,
             cached_first: bool = True,
-            from_date: str = '',
-            to_date: str = '',
             chain: str = 'eth',
             order: str = 'DESC',
         ):
         self.address = address
         self.table_name = table_name
         self.cached_first = cached_first
-        self.from_date = from_date
-        self.to_date = to_date
         self.chain = chain
         self.order = order
 
@@ -27,10 +23,6 @@ class QueryParameters(object):
             ck.ORDER: self.order, 
             ck.ADDRESS: self.address,
         }
-        if self.from_date != '':
-            parameters[ck.FROM_DATE] = self.from_date
-        if self.to_date != '':
-            parameters[ck.TO_DATE] = self.to_date
         return parameters
 
 
@@ -41,8 +33,6 @@ class StatsQueryParameters(QueryParameters):
             address: str, 
             table_name: str,
             cached_first: bool = True,
-            from_date: str = '',
-            to_date: str = '',
             chain: str = 'eth',
             order: str = 'DESC',
         ):
@@ -50,8 +40,6 @@ class StatsQueryParameters(QueryParameters):
             address,  
             table_name,
             cached_first,
-            from_date,
-            to_date,
             chain,
             order,
         )
@@ -75,16 +63,20 @@ class TransactionsQueryParameters(QueryParameters):
             address,
             table_name,
             cached_first,
-            from_date,
-            to_date,
             chain,
             order,
         )
+        self.from_date = from_date
+        self.to_date = to_date
         self.contract_addresses = contract_addresses
         self.cursor = cursor
 
     def to_dict(self):
         parameters = super().to_dict()
+        if self.from_date != '':
+            parameters[ck.FROM_DATE] = self.from_date
+        if self.to_date != '':
+            parameters[ck.TO_DATE] = self.to_date
         if self.contract_addresses:
             parameters[ck.CONTRACT_ADDRESSES] = self.contract_addresses
         if self.cursor != '0':
@@ -124,14 +116,11 @@ class WalletQueryParameters(TransactionsQueryParameters):
     def to_dict(self):
         return super().to_dict()
 
-
     def to_stats_query(self) -> StatsQueryParameters:
         return StatsQueryParameters(
             self.address,
             self.stats_table_name,
             self.cached_first,
-            self.from_date,
-            self.to_date,
             self.chain,
             self.order,
         )
