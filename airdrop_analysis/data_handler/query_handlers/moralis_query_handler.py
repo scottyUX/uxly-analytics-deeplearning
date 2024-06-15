@@ -20,26 +20,31 @@ class MoralisQueryHandler(object):
     def __query_wallet_transactions_page(
             self, 
             params: TransactionsQueryParameters,
+            query: callable,
         ):
-        page = moralis.evm_api.transaction.get_wallet_transactions(
+        page = query(
             api_key=self.__api_key, 
             params=params.to_dict(),
         )
         return page[ck.RESULT], page[ck.CURSOR]
     
-    def query_wallet_transactions(
+    def __query_wallet_transactions(
             self, 
             params: TransactionsQueryParameters,
+            query: callable,
+            event: str,
         ):
         address = params.address
         transactions = []
         try:
             while params.cursor is not None:
-                tnxs, cursor = self.__query_wallet_transactions_page(params)
+                tnxs, cursor = self.__query_wallet_transactions_page(
+                    params, query,
+            )
                 transactions.extend(tnxs)
                 params.cursor = cursor
                 cnt = len(transactions)
-                s = f'Queryied {cnt} transactions for {address}.'
+                s = f'Queryied {cnt} {event}s for {address}.'
                 if params.cursor is not None:
                     s += f' Querying next page...'
                 else:
@@ -47,10 +52,31 @@ class MoralisQueryHandler(object):
                 print(s, end='\r')
         except Exception as e:
             if 'Reason: Internal Server Error' in str(e):
-                print(f'Internal Server Error querying tnxs for {address}')
+                print(f'Internal Server Error querying {event}s for {address}')
             else:
                 print(e)
         return transactions, params.cursor
+    
+    
+    def query_wallet_transactions(
+            self, 
+            params: TransactionsQueryParameters,
+        ):
+        return self.__query_wallet_transactions(
+            params, 
+            moralis.evm_api.transaction.get_wallet_transactions,
+            'transaction',
+        )
+    
+    def query_wallet_token_transfers(
+            self, 
+            params: TransactionsQueryParameters,
+        ):
+        return self.__query_wallet_transactions(
+            params, 
+            moralis.evm_api.token.get_wallet_token_transfers,
+            'token transfer',
+        )
     
     def query_wallet_stats(
             self, 

@@ -52,7 +52,6 @@ class TransactionsQueryParameters(QueryParameters):
             address: str, 
             table_name: str,
             cached_first: bool = True,
-            contract_addresses: list = [], 
             from_date: str = '',
             to_date: str = '',
             chain: str = 'eth',
@@ -69,7 +68,6 @@ class TransactionsQueryParameters(QueryParameters):
         )
         self.from_date = from_date
         self.to_date = to_date
-        self.contract_addresses = contract_addresses
         self.limit = limit
         self.cursor = cursor
 
@@ -80,52 +78,41 @@ class TransactionsQueryParameters(QueryParameters):
             parameters[ck.FROM_DATE] = self.from_date
         if self.to_date != '':
             parameters[ck.TO_DATE] = self.to_date
-        if (self.contract_addresses):
-            parameters[ck.CONTRACT_ADDRESSES] = self.contract_addresses
         if self.cursor != '0':
             parameters[ck.CURSOR] = self.cursor
         return parameters
 
 
-class WalletQueryParameters(TransactionsQueryParameters):
+class TokenTransfersQueryParameters(TransactionsQueryParameters):
 
     def __init__(
             self,
             address: str, 
-            transaction_table_name: str,
-            include_stats: bool = False,
-            stats_table_name: str = '',
+            table_name: str,
             cached_first: bool = True,
             contract_addresses: list = [], 
             from_date: str = '',
             to_date: str = '',
             chain: str = 'eth',
             order: str = 'DESC',
+            limit: int = 300,
             cursor: str = '0',
         ):
         super().__init__(
             address,
-            transaction_table_name,
+            table_name,
             cached_first,
-            contract_addresses,
             from_date,
             to_date,
             chain,
             order,
+            limit,
             cursor,
         )
-        self.include_stats = include_stats
-        self.stats_table_name = stats_table_name
-        self.transaction_table_name = transaction_table_name
+        self.contract_addresses = contract_addresses
 
     def to_dict(self):
-        return super().to_dict()
-
-    def to_stats_query(self) -> StatsQueryParameters:
-        return StatsQueryParameters(
-            self.address,
-            self.stats_table_name,
-            self.cached_first,
-            self.chain,
-            self.order,
-        )
+        parameters = super().to_dict()
+        if (self.contract_addresses):
+            parameters[ck.CONTRACT_ADDRESSES] = self.contract_addresses
+        return parameters

@@ -5,11 +5,7 @@ from data_handler.models.base_models.wallet import WalletStats
 from data_handler.models.base_models.transaction_history \
     import TransactionHistory
 from utils.custom_keys import CustomKeys as ck
-from data_handler.models.base_models.query_parameters \
-    import TransactionsQueryParameters
-from data_handler.models.base_models.query_parameters \
-    import StatsQueryParameters
-
+from data_handler.models.base_models.query_parameters import *
 
 class DynamoDBQueryHandler(object):
     def __init__(self, access_key_path: str):
@@ -54,6 +50,23 @@ class DynamoDBQueryHandler(object):
         return WalletStats.from_dict(response)
     
     def get_wallet_transactions(self, params: TransactionsQueryParameters):
+        key = {ck.ADDRESS: params.address}
+        response = self.__get_item(params.table_name, key)
+        if response is None:
+            return None
+        return TransactionHistory.from_dict(response)
+
+    def put_wallet_token_transfers(
+            self, 
+            table_name: str, 
+            transaction_history: TransactionHistory,
+        ):
+        self.__put_item(table_name, transaction_history.to_dict())
+
+    def get_wallet_token_transfers(
+            self, 
+            params: TokenTransfersQueryParameters,
+        ):
         key = {ck.ADDRESS: params.address}
         response = self.__get_item(params.table_name, key)
         if response is None:
