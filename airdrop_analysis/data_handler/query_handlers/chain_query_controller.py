@@ -6,6 +6,7 @@ from data_handler.query_handlers.dynomodb_query_handler \
     import DynamoDBQueryHandler
 from data_handler.models.base_models.query_parameters import *
 from data_handler.models.base_models.wallet import WalletStats
+from data_handler.models.base_models.transaction import Transaction
 from data_handler.models.base_models.transaction_history \
     import TransactionHistory
 from utils.custom_keys import CustomKeys as ck
@@ -40,7 +41,7 @@ class ChainQueryController():
             return history
         tnxs, cursor = self.__moralis_handler.query_wallet_transactions(params)
         d = params.to_dict()
-        d[ck.TRANSACTIONS] = tnxs 
+        d[ck.TRANSACTIONS] = tnxs
         d[ck.CURSOR] = cursor
         d[ck.CHAIN] = params.chain
         history = TransactionHistory.from_dict(d)
@@ -66,8 +67,9 @@ class ChainQueryController():
             params,
         )
         d = params.to_dict()
-        d[ck.TRANSACTIONS] = tnxs 
+        d[ck.TRANSACTIONS] = tnxs
         d[ck.CURSOR] = cursor
+        d[ck.CHAIN] = params.chain
         history = TransactionHistory.from_dict(d)
         self.__dynamodb_handler.put_wallet_transactions(
             params.table_name, 
