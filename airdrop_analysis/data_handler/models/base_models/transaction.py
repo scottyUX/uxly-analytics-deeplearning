@@ -5,15 +5,36 @@ from decimal import Decimal
 from utils.custom_keys import CustomKeys as ck
 
 
-class Transaction(BaseModel):
+class TransactionBase(BaseModel):
+    from_address: str
+    from_address_label: Optional[str] = None
+    to_address: str
+    to_address_label: Optional[str] = None
+    value: int
+    block_hash: str
+    block_number: int
+    block_timestamp: str
+
+    def from_dict(response: dict):
+        return TransactionBase(
+            from_address = response[ck.FROM_ADDRESS],
+            from_address_label = response[ck.FROM_ADDRESS_LABEL],
+            to_address = response[ck.TO_ADDRESS],
+            to_address_label = response[ck.TO_ADDRESS_LABEL],
+            value = int(response[ck.VALUE]),
+            block_hash = response[ck.BLOCK_HASH],
+            block_number = int(response[ck.BLOCK_NUMBER]),
+            block_timestamp = response[ck.BLOCK_TIMESTAMP],
+        )
+
+    def to_dict(self):
+        return self.model_dump(exclude_unset=True)
+
+
+class Transaction(TransactionBase):
     hash_: str
     nonce: int
     transaction_index: int
-    from_address: str
-    from_address_label: Optional[str]
-    to_address: str
-    to_address_label: Optional[str]
-    value: int
     gas: int
     gas_price: int
     input_: str
@@ -22,9 +43,6 @@ class Transaction(BaseModel):
     receipt_contract_address: Optional[str]
     receipt_root: Optional[str]
     receipt_status: str
-    block_timestamp: str
-    block_number: int
-    block_hash: str
     transfer_index: list
     transaction_fee: Decimal
     

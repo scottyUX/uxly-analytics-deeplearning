@@ -1,14 +1,15 @@
 from pydantic import BaseModel
 from typing import Optional, List
 
-from data_handler.models.base_models.transaction import Transaction
+from data_handler.models.base_models.transaction import *
+from data_handler.models.base_models.token_transfer import TokenTransfer
 from utils.custom_keys import CustomKeys as ck
 
 
 class TransactionHistory(BaseModel):
     address: str
     chain: str
-    transactions: List[Transaction]
+    transactions: List[TransactionBase]
     from_date: str
     to_date: str
     contract_addresses: List[str]
@@ -22,7 +23,12 @@ class TransactionHistory(BaseModel):
             d[ck.TO_DATE] = ''
         if ck.CONTRACT_ADDRESSES not in d:
             d[ck.CONTRACT_ADDRESSES] = []
-        tnxs = [Transaction.from_dict(tx) for tx in d[ck.TRANSACTIONS]]
+        if len(d[ck.TRANSACTIONS]) == 0:
+            d[ck.TRANSACTIONS] = []
+        if ck.HASH in d[ck.TRANSACTIONS][0]:
+            tnxs = [Transaction.from_dict(tx) for tx in d[ck.TRANSACTIONS]]
+        else:
+            tnxs = [TokenTransfer.from_dict(tx) for tx in d[ck.TRANSACTIONS]]
         return TransactionHistory(
             address=d[ck.ADDRESS],
             chain=d[ck.CHAIN],

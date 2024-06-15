@@ -61,6 +61,18 @@ class CustomKeys:
     TRANSFER_INDEX = 'transfer_index'
     TRANSACTION_FEE = 'transaction_fee'
 
+    # Token transfer
+    TOKEN_NAME = 'token_name'
+    TOKEN_SYMBOL = 'token_symbol'
+    TOKEN_LOGO = 'token_logo'
+    TOKEN_DECIMALS = 'token_decimals'
+    BLOCK_HASH = 'block_hash'
+    TRANSACTION_HASH = 'transaction_hash'
+    LOG_INDEX = 'log_index'
+    POSSIBLE_SPAM = 'possible_spam'
+    VALUE_DECIMAL = 'value_decimal'
+    VERIFIED_CONTRACT = 'verified_contract'
+
     # DynamoDB
     ITEM = 'Item'
     TABLE_NAME = 'TableName'
