@@ -1,118 +1,28 @@
-from utils.custom_keys import CustomKeys as ck
+from pydantic import BaseModel
+from typing import Optional
 
 
-class QueryParameters(object):
-
-    def __init__(
-            self,
-            address: str,  
-            table_name: str,
-            cached_first: bool = True,
-            chain: str = 'eth',
-            order: str = 'DESC',
-        ):
-        self.address = address
-        self.table_name = table_name
-        self.cached_first = cached_first
-        self.chain = chain
-        self.order = order
+class QueryParameters(BaseModel):
+    address: str
+    table_name: str
+    cached_first: Optional[bool] = True
+    chain: Optional[str] = 'eth'
+    order: Optional[str] = 'DESC'
 
     def to_dict(self):
-        parameters = {
-            ck.CHAIN: self.chain, 
-            ck.ORDER: self.order, 
-            ck.ADDRESS: self.address,
-        }
-        return parameters
+        return self.model_dump(exclude_unset=True)
 
 
 class StatsQueryParameters(QueryParameters):
-
-    def __init__(
-            self,
-            address: str, 
-            table_name: str,
-            cached_first: bool = True,
-            chain: str = 'eth',
-            order: str = 'DESC',
-        ):
-        super().__init__(
-            address,  
-            table_name,
-            cached_first,
-            chain,
-            order,
-        )
+    pass
 
 
 class TransactionsQueryParameters(QueryParameters):
-
-    def __init__(
-            self,
-            address: str, 
-            table_name: str,
-            cached_first: bool = True,
-            from_date: str = '',
-            to_date: str = '',
-            chain: str = 'eth',
-            order: str = 'DESC',
-            limit: int = 300,
-            cursor: str = '0',
-        ):
-        super().__init__(
-            address,
-            table_name,
-            cached_first,
-            chain,
-            order,
-        )
-        self.from_date = from_date
-        self.to_date = to_date
-        self.limit = limit
-        self.cursor = cursor
-
-    def to_dict(self):
-        parameters = super().to_dict()
-        parameters[ck.LIMIT] = self.limit
-        if self.from_date != '':
-            parameters[ck.FROM_DATE] = self.from_date
-        if self.to_date != '':
-            parameters[ck.TO_DATE] = self.to_date
-        if self.cursor != '0':
-            parameters[ck.CURSOR] = self.cursor
-        return parameters
+    from_date: Optional[str] = ''
+    to_date: Optional[str] = ''
+    limit: Optional[int] = 300
+    cursor: Optional[str] = '0'
 
 
 class TokenTransfersQueryParameters(TransactionsQueryParameters):
-
-    def __init__(
-            self,
-            address: str, 
-            table_name: str,
-            cached_first: bool = True,
-            contract_addresses: list = [], 
-            from_date: str = '',
-            to_date: str = '',
-            chain: str = 'eth',
-            order: str = 'DESC',
-            limit: int = 300,
-            cursor: str = '0',
-        ):
-        super().__init__(
-            address,
-            table_name,
-            cached_first,
-            from_date,
-            to_date,
-            chain,
-            order,
-            limit,
-            cursor,
-        )
-        self.contract_addresses = contract_addresses
-
-    def to_dict(self):
-        parameters = super().to_dict()
-        if (self.contract_addresses):
-            parameters[ck.CONTRACT_ADDRESSES] = self.contract_addresses
-        return parameters
+    contract_addresses: list = []

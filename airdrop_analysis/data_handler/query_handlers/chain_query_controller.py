@@ -8,6 +8,7 @@ from data_handler.models.base_models.query_parameters import *
 from data_handler.models.base_models.wallet import WalletStats
 from data_handler.models.base_models.transaction_history \
     import TransactionHistory
+from utils.custom_keys import CustomKeys as ck
 
 
 class ChainQueryController():
@@ -41,6 +42,7 @@ class ChainQueryController():
         d = params.to_dict()
         d[ck.TRANSACTIONS] = tnxs 
         d[ck.CURSOR] = cursor
+        d[ck.CHAIN] = params.chain
         history = TransactionHistory.from_dict(d)
         self.__dynamodb_handler.put_wallet_transactions(
             params.table_name, 
