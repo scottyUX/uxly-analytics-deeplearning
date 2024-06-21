@@ -25,7 +25,9 @@ class TransactionHistory(BaseModel):
             d[ck.CONTRACT_ADDRESSES] = []
         if len(d[ck.TRANSACTIONS]) == 0:
             d[ck.TRANSACTIONS] = []
-        if ck.HASH in d[ck.TRANSACTIONS][0]:
+        if len(d[ck.TRANSACTIONS]) == 0:
+            tnxs = []
+        elif ck.HASH in d[ck.TRANSACTIONS][0]:
             tnxs = [Transaction.from_dict(tx) for tx in d[ck.TRANSACTIONS]]
         else:
             tnxs = [TokenTransfer.from_dict(tx) for tx in d[ck.TRANSACTIONS]]
