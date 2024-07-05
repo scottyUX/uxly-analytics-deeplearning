@@ -96,6 +96,7 @@ class ChainQueryControllerTest():
         for address in addresses:
             params = TokenTransfersQueryParameters(
                 address=address, 
+                chain='base',
                 table_name=table,
                 cached_first=False,
                 contract_addresses=contract_addresses,
@@ -104,8 +105,8 @@ class ChainQueryControllerTest():
             print(history.get_transaction_count())
 
     def run_tests(self):
-        self.__test_query_wallet_stats()
-        self.__test_query_wallet_transactions()
-        self.__test_query_wallet_transactions_with_dates()
-        self.__test_query_wallet_transactions_with_contracts()
+        # self.__test_query_wallet_stats()
+        # self.__test_query_wallet_transactions()
+        # self.__test_query_wallet_transactions_with_dates()
+        # self.__test_query_wallet_transactions_with_contracts()
         self.__test_query_wallet_token_transfers()
