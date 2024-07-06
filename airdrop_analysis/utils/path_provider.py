@@ -41,3 +41,6 @@ class PathProvider(object):
 
     def get_table_file_path(self):
         return self[ck.TABLES_FILE_PATH]
+    
+    def get_airdrop_table_path(self):
+        return self[ck.AIRDROPS_DATABASE_PATH]

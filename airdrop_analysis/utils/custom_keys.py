@@ -81,3 +81,6 @@ class CustomKeys:
     STATS = 'stats'
     STATS_TABLE = 'stats_table'
     TRANSACTIONS_TABLE = 'transactions_table'
+
+    # Airdrop tables
+    AIRDROPS_DATABASE_PATH = 'airdrops_database_path'
