@@ -99,6 +99,7 @@ class ChainQueryControllerTest():
                 chain='base',
                 table_name=table,
                 cached_first=False,
+                from_date='2024-01-01T00:00:00Z',
                 contract_addresses=contract_addresses,
                 )
             history = self.__controller.get_wallet_token_transfer_history(params)
