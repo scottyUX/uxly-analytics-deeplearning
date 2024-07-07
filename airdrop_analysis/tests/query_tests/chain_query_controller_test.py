@@ -24,10 +24,9 @@ class ChainQueryControllerTest():
 
     def __test_query_wallet_token_transfers_with_contracts(self):
         address = self.__claimers.iloc[36][ck.WALLET_ADDRESS]
-        table = self.__tables[ck.AIRDROPS][ck.DEGEN][0][ck.TRANSACTIONS_TABLE]
         prms1 = TokenTransfersQueryParameters(
             address=address, 
-            table_name=table,
+            chain='base',
             cached_first=False,
             from_date='2012-12-01T00:00:00Z',
             to_date='2024-06-01T00:00:00Z',
@@ -37,7 +36,7 @@ class ChainQueryControllerTest():
         print(history.get_transaction_count())
         prms2 = TokenTransfersQueryParameters(
             address=address, 
-            table_name=table,
+            chain='base',
             cached_first=False,
             from_date='2012-12-01T00:00:00Z',
             to_date='2024-06-01T00:00:00Z',
@@ -50,18 +49,18 @@ class ChainQueryControllerTest():
 
     def __test_query_wallet_token_transfers(self):
         contract_addresses=['0x4ed4e862860bed51a9570b96d89af5e1b0efefed']
-        addresses = self.__claimers[ck.WALLET_ADDRESS].to_list()[:5]
-        table = self.__tables[ck.AIRDROPS][ck.DEGEN][0][ck.TRANSACTIONS_TABLE]
+        addresses = self.__claimers[ck.WALLET_ADDRESS].to_list()[:8]
         for address in addresses:
             params = TokenTransfersQueryParameters(
                 address=address, 
                 chain='base',
-                table_name=table,
-                cached_first=False,
+                cached_first=True,
                 from_date='2024-01-01T00:00:00Z',
                 contract_addresses=contract_addresses,
                 )
-            history, _ = self.__controller.get_wallet_token_transfer_history(params)
+            history, _ = self.__controller.get_wallet_token_transfer_history(
+                params,
+            )
             print(history.get_transaction_count())
 
     def run_tests(self):

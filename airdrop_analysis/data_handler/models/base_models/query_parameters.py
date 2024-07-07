@@ -1,12 +1,13 @@
 from pydantic import BaseModel
 from typing import Optional
 
+from utils.custom_keys import CustomKeys as ck
+
 
 class QueryParameters(BaseModel):
     address: str
-    table_name: str
+    chain: str = 'eth'
     cached_first: Optional[bool] = True
-    chain: Optional[str] = 'eth'
     order: Optional[str] = 'DESC'
 
     def to_dict(self):
@@ -23,6 +24,10 @@ class TransactionsQueryParameters(QueryParameters):
     limit: Optional[int] = 300
     cursor: Optional[str] = '0'
 
+    def to_dict(self):
+        super_dict = super().to_dict()
+        super_dict[ck.LIMIT] = self.limit
+        return super_dict
 
 class TokenTransfersQueryParameters(TransactionsQueryParameters):
     contract_addresses: list = []

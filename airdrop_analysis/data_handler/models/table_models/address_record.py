@@ -20,6 +20,7 @@ class Address_Record(BaseModel):
     last_outgoing_transaction_destination = CharField()
     chain = CharField()
     contract_address = CharField()
+    last_cursor = CharField(null=True)
 
     def create_from(history: TransactionHistory):
         ins = history.get_received_transactions()
@@ -50,4 +51,5 @@ class Address_Record(BaseModel):
             last_outgoing_transaction_destination = last_destination,
             chain = history.chain,
             contract_address = contract_address,
+            last_cursor = history.last_cursor,
         )

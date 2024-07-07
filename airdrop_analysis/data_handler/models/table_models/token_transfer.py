@@ -10,8 +10,8 @@ class Token_Transfer(BaseModel):
     block_timestamp = DateTimeField()
     block_hash = CharField()
     transaction_hash = CharField()
-    token_name = CharField()
-    contract_address = CharField()
+    token_name = CharField(null=True)
+    contract_address = CharField(null=True)
     chain = CharField()
     
     def create_from_dict(chain: str, response: dict):
