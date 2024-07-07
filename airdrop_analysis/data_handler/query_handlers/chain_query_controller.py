@@ -1,78 +1,45 @@
-
+from typing import Tuple
 
 from data_handler.query_handlers.moralis_query_handler \
     import MoralisQueryHandler
-from data_handler.query_handlers.dynomodb_query_handler \
-    import DynamoDBQueryHandler
+from data_handler.query_handlers.pw_query_handler import PWQueryHandler
 from data_handler.models.base_models.query_parameters import *
-from data_handler.models.base_models.wallet import WalletStats
-from data_handler.models.base_models.transaction import Transaction
+from data_handler.models.table_models.address_record import Address_Record
 from data_handler.models.base_models.transaction_history \
     import TransactionHistory
 from utils.custom_keys import CustomKeys as ck
 
 
 class ChainQueryController():
-    def __init__(self, api_keys_path: str, access_key_path: str):
+    def __init__(self, api_keys_path: str):
         self.__moralis_handler = MoralisQueryHandler(api_keys_path)
-        self.__dynamodb_handler = DynamoDBQueryHandler(access_key_path)
+        self.__database_handler = PWQueryHandler()
 
-    def get_wallet_stats(self, params: StatsQueryParameters) -> WalletStats:
-        stats = None
-        if params.cached_first:
-            stats = self.__dynamodb_handler.get_wallet_stats(params)
-        if stats is not None:
-            return stats
-        response = self.__moralis_handler.query_wallet_stats(params)
-        stats = WalletStats.from_moralis_dict(
-            params.address, params.chain, response,
-        )
-        self.__dynamodb_handler.put_wallet_stats(params.table_name, stats)
-        return stats
-
-    def get_wallet_transaction_history(
-            self,
-            params: TransactionsQueryParameters,
-        ) -> TransactionHistory:
-        history = None
-        if params.cached_first:
-            history = self.__dynamodb_handler.get_wallet_transactions(params)
-        if history is not None:
-            return history
-        tnxs, cursor = self.__moralis_handler.query_wallet_transactions(params)
-        d = params.to_dict()
-        d[ck.TRANSACTIONS] = tnxs
-        d[ck.CURSOR] = cursor
-        d[ck.CHAIN] = params.chain
-        history = TransactionHistory.from_dict(d)
-        self.__dynamodb_handler.put_wallet_transactions(
-            params.table_name, 
-            history,
-        )
-        return history
-
+    def get_address_record(self, address) -> Address_Record:
+        return self.__database_handler.get_address_record(address)
 
     def get_wallet_token_transfer_history(
             self,
             params: TokenTransfersQueryParameters,
-        ) -> TransactionHistory:
-        history = None
+        ) -> Tuple[TransactionHistory, Address_Record]:
+        transfers = None
         if params.cached_first:
-            history = self.__dynamodb_handler.get_wallet_token_transfers(
-                params,
+            transfers = self.__database_handler.get_token_transfers_by_address(
+                params.address,
         )
-        if history is not None:
-            return history
+        if transfers is not None:
+            return transfers
         tnxs, cursor = self.__moralis_handler.query_wallet_token_transfers(
             params,
         )
         d = params.to_dict()
-        d[ck.TRANSACTIONS] = tnxs
+        transfers = self.__database_handler.create_wallet_token_transfers(
+            params.chain, 
+            tnxs,
+        )
+        d[ck.TRANSACTIONS] = transfers
         d[ck.CURSOR] = cursor
         d[ck.CHAIN] = params.chain
         history = TransactionHistory.from_dict(d)
-        self.__dynamodb_handler.put_wallet_transactions(
-            params.table_name, 
-            history,
-        )
-        return history
+        record = self.__database_handler.create_wallet_record(history)
+        return history, record
