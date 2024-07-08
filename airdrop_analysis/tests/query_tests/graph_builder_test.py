@@ -28,7 +28,7 @@ class GraphBuilderTest():
             to_date='2024-06-01T00:00:00Z',
             parent_depth=1,
             child_depth=3,
-            edge_limit=5,
+            edge_limit=-1,
             edge_order='DESC',
             )
         g = self.__builder.build_graph(param1)

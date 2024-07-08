@@ -48,9 +48,10 @@ class GraphVisualizer:
 
     def visualize_with_pyvis(self, html_file_path: str):
         net = Network(
-            height='750px', 
+            height='1000px', 
             width='100%', 
             directed=True, 
         )
         net.from_nx(self.G)
+        print()
         net.show(html_file_path, notebook=False)

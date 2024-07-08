@@ -81,7 +81,7 @@ class GraphBuilder():
         ) -> Node:
         if address in self.__graph:
             return self.__graph.nodes[address]
-        elif child_hirerarchy <= self.__current_query_params.child_depth:
+        elif child_hirerarchy >= self.__current_query_params.child_depth:
             return Node(id=address, hirerarchy=child_hirerarchy)
         else:
             return self.__query_node(address, child_hirerarchy)
@@ -108,10 +108,11 @@ class GraphBuilder():
         incoming_edges: List[Edge] = []
         for transaction in received_transactions:
             if transaction.from_address in parents:
+                token_name = transaction.token_name
                 edge = Edge(
                     source=parents[transaction.from_address],
                     destination=destination,
-                    edge_type=transaction.token_name,
+                    edge_type= token_name if token_name else '',
                     edge_value=transaction.value,
                     edge_timestamp=transaction.block_timestamp,
                 )
