@@ -68,6 +68,19 @@ class Node(BaseModel):
         for edge in edges:
             self.add_outgoing_edge(edge)
 
+    def delete_edge(self, edge: 'Edge') -> bool:
+        if edge.destination == self:
+            if edge.id not in self.__incoming_edges:
+                return False
+            self.__incoming_edges.pop(edge.id)
+            return True
+        elif edge.source == self:
+            if edge.id not in self.__outgoing_edges:
+                return False
+            self.__outgoing_edges.pop(edge.id)
+            return True
+        return False
+
     def __eq__(self, other):
         if isinstance(other, str):
             return self.id == other

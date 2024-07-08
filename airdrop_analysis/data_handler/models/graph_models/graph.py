@@ -41,6 +41,52 @@ class Graph(BaseModel):
         for node in nodes:
             self.add_node(node)
 
+    def delete_edge(self, edge: Union[Edge, str]) -> bool:
+        if isinstance(edge, str):
+            edge_id = edge
+        else:
+            edge_id = edge.id
+        if edge_id not in self.__edges:
+            return False
+        edge = self.__edges.pop(edge_id)
+        edge.source.delete_edge(edge)
+        edge.destination.delete_edge(edge)
+        return True
+
+    def delete_node(self, node: Union[Node, str]) -> bool:
+        if isinstance(node, str):
+            node_id = node
+        else:
+            node_id = node.id
+        if node_id not in self.__nodes:
+            return False
+        node = self.__nodes.pop(node_id)
+        for edge in node.incoming_edges + node.outgoing_edges:
+            self.delete_edge(edge)
+        return True
+
+    def clear_children_from_rootless_parents(self):
+        nodes_to_delete = []
+        for node in self.__nodes.values():
+            if node.hirerarchy > 0 and not node.incoming_edges:
+                nodes_to_delete.append(node)
+        for node in nodes_to_delete:
+            self.delete_node(node)
+        return
+
+    def clear_parents_from_leaf_children(self):
+        nodes_to_delete = []
+        for node in self.__nodes.values():
+            if node.hirerarchy < 0 and not node.outgoing_edges:
+                nodes_to_delete.append(node)
+        for node in nodes_to_delete:
+            self.delete_node(node)
+        return
+
+    def remove_indirect_nodes(self):
+        self.clear_children_from_rootless_parents()
+        self.clear_parents_from_leaf_children()
+
     def __contains__(self, node: Union[Node, str]) -> bool:
         if isinstance(node, str):
             return node in self.__nodes

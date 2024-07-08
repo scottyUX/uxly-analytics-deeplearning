@@ -32,6 +32,7 @@ class GraphBuilderTest():
             edge_order='DESC',
             )
         g = self.__builder.build_graph(param1)
+        g.remove_indirect_nodes()
         file_path = self.__path_provider.get_graph_html_path('test_graph')
         GraphVisualizer(g).visualize_with_pyvis(file_path)
 
