@@ -12,6 +12,10 @@ class Node(BaseModel):
     __outgoing_edges: Dict[str, 'Edge'] = {}
 
     @property
+    def label(self):
+        return self.id[-4:] + f' ({self.hirerarchy})'
+
+    @property
     def incoming_edges(self):
         return list(self.__incoming_edges.values())
     
@@ -70,6 +74,9 @@ class Node(BaseModel):
         if isinstance(other, Node):
             return self.id == other.id
         raise ValueError(f'Cannot compare Node to {type(other)}')
+
+    def __hash__(self):
+        return hash((self.id, self.hirerarchy))
 
     def to_dict(self):
         return self.model_dump() 

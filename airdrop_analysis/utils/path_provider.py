@@ -44,3 +44,9 @@ class PathProvider(object):
     
     def get_airdrop_table_path(self):
         return self[ck.AIRDROPS_DATABASE_PATH]
+    
+    def get_graph_html_path(self, graph_name: str):
+        return self.__sep.join([
+            self[ck.GRAPH_HTMLS_FOLDER_PATH].replace('/', self.__sep), 
+            graph_name + '.html',
+        ])

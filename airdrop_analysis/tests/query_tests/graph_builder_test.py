@@ -1,11 +1,11 @@
 import pandas as pd
-import json
 
 from data_handler.graph_builder import GraphBuilder
-from utils.path_provider import PathProvider
-from utils.custom_keys import CustomKeys as ck
+from data_handler.graph_visualizer import GraphVisualizer
 from data_handler.models.base_models.query_parameters import \
     GraphQueryParameters
+from utils.path_provider import PathProvider
+from utils.custom_keys import CustomKeys as ck
 
 
 class GraphBuilderTest():
@@ -16,11 +16,8 @@ class GraphBuilderTest():
             self.__path_provider.get_api_keys_path(),
         )
         self.__claimers = pd.read_csv(self.__path_provider[ck.CLAIMERS_PATH])
-        with open(self.__path_provider.get_table_file_path(), 'r') as file:
-            self.__tables = json.loads(file.read())
-        print(self.__tables)
 
-    def __test_building_graph_with_limit_one(self, n: int = 1):
+    def __test_building_graph_with_limit_one(self, n: int = 5):
         addresses = self.__claimers.iloc[:n][ck.WALLET_ADDRESS]
         contract_addresses = ['0x4ed4e862860bed51a9570b96d89af5e1b0efefed']
         param1 = GraphQueryParameters(
@@ -30,11 +27,13 @@ class GraphBuilderTest():
             from_date='2012-12-01T00:00:00Z',
             to_date='2024-06-01T00:00:00Z',
             parent_depth=1,
-            child_depth=1,
+            child_depth=3,
             edge_limit=5,
             edge_order='DESC',
             )
-        self.__builder.build_graph(param1)
+        g = self.__builder.build_graph(param1)
+        file_path = self.__path_provider.get_graph_html_path('test_graph')
+        GraphVisualizer(g).visualize_with_pyvis(file_path)
 
     def run_tests(self):
         self.__test_building_graph_with_limit_one()
