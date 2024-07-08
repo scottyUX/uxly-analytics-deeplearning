@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List
 
 from utils.custom_keys import CustomKeys as ck
 
@@ -29,5 +29,22 @@ class TransactionsQueryParameters(QueryParameters):
         super_dict[ck.LIMIT] = self.limit
         return super_dict
 
+
 class TokenTransfersQueryParameters(TransactionsQueryParameters):
-    contract_addresses: list = []
+    contract_addresses: List[str] = []
+
+
+class GraphQueryParameters(BaseModel):
+    center_addresses: List[str]
+    chain: str
+    contract_addresses: List[str]
+    from_date: Optional[str] = ''
+    to_date: Optional[str] = ''
+    parent_depth: Optional[int] = 1
+    child_depth: Optional[int] = 1
+    edge_limit: Optional[int] = -1
+    edge_order: Optional[str] = 'DESC'
+
+    def to_dict(self):
+        return self.model_dump(exclude_unset=True)
+

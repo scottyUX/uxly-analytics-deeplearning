@@ -61,16 +61,16 @@ class TransactionHistory(BaseModel):
     
     def get_sender_addresses(self) -> List[str]:
         if self.__sender_addresses is None:
-            sent_transactions = self.get_sent_transactions()
+            sent_transactions = self.get_received_transactions()
             self.__sender_addresses = \
-                list(set([tx.to_address for tx in sent_transactions]))
+                list(set([tx.from_address for tx in sent_transactions]))
         return self.__sender_addresses
     
     def get_receiver_addresses(self) -> List[str]:
         if self.__receiver_addresses is None:
-            received_transactions = self.get_received_transactions()
+            received_transactions = self.get_sent_transactions()
             self.__receiver_addresses = \
-                list(set([tx.from_address for tx in received_transactions]))
+                list(set([tx.to_address for tx in received_transactions]))
         return self.__receiver_addresses
 
     class Config:

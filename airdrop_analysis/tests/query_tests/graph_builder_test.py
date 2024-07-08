@@ -1,0 +1,40 @@
+import pandas as pd
+import json
+
+from data_handler.graph_builder import GraphBuilder
+from utils.path_provider import PathProvider
+from utils.custom_keys import CustomKeys as ck
+from data_handler.models.base_models.query_parameters import \
+    GraphQueryParameters
+
+
+class GraphBuilderTest():
+
+    def __init__(self, paths_json_path: str, prefix_path: str):
+        self.__path_provider = PathProvider(paths_json_path, prefix_path)
+        self.__builder = GraphBuilder(
+            self.__path_provider.get_api_keys_path(),
+        )
+        self.__claimers = pd.read_csv(self.__path_provider[ck.CLAIMERS_PATH])
+        with open(self.__path_provider.get_table_file_path(), 'r') as file:
+            self.__tables = json.loads(file.read())
+        print(self.__tables)
+
+    def __test_building_graph_with_limit_one(self, n: int = 1):
+        addresses = self.__claimers.iloc[:n][ck.WALLET_ADDRESS]
+        contract_addresses = ['0x4ed4e862860bed51a9570b96d89af5e1b0efefed']
+        param1 = GraphQueryParameters(
+            center_addresses=addresses.to_list(),
+            chain='base',
+            contract_addresses=contract_addresses,
+            from_date='2012-12-01T00:00:00Z',
+            to_date='2024-06-01T00:00:00Z',
+            parent_depth=1,
+            child_depth=1,
+            edge_limit=5,
+            edge_order='DESC',
+            )
+        self.__builder.build_graph(param1)
+
+    def run_tests(self):
+        self.__test_building_graph_with_limit_one()
