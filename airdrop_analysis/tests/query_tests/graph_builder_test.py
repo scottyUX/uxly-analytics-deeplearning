@@ -26,8 +26,8 @@ class GraphBuilderTest():
             contract_addresses=contract_addresses,
             from_date='2012-12-01T00:00:00Z',
             to_date='2024-06-01T00:00:00Z',
-            parent_depth=1,
-            child_depth=3,
+            parent_depth=2,
+            child_depth=1,
             edge_limit=-1,
             edge_order='DESC',
             )

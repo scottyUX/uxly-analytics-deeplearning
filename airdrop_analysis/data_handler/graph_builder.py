@@ -47,7 +47,7 @@ class GraphBuilder():
         ) -> Node:
         if address in self.__graph:
             return self.__graph.nodes[address]
-        elif parent_hirerarchy <= self.__current_query_params.parent_depth:
+        elif parent_hirerarchy <= -self.__current_query_params.parent_depth:
             return Node(id=address, hirerarchy=parent_hirerarchy)
         else:
             return self.__query_node(address, parent_hirerarchy)

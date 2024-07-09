@@ -9,11 +9,11 @@ class GraphVisualizer:
     def __init__(self, graph: Graph):
         self.graph = graph
         self.color_map = {
-            -1: 'red',
-            -2: 'orange',
-            -3: 'yellow',
-            -4: 'green',
             -5: 'blue',
+            -4: 'green',
+            -3: 'yellow',
+            -2: 'orange',
+            -1: 'red',
             0: 'purple',
             1: 'pink',
             2: 'brown',
