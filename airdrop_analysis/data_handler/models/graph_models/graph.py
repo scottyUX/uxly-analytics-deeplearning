@@ -31,6 +31,10 @@ class Graph(BaseModel):
 
     def add_node(self, node: Node) -> bool:
         if node.id in self.__nodes:
+            if (self.__nodes[node.id].edges) == node.edges:
+                self.add_edges(node.incoming_edges)
+                self.add_edges(node.outgoing_edges)
+                return True
             return False
         self.__nodes[node.id] = node
         self.add_edges(node.incoming_edges)

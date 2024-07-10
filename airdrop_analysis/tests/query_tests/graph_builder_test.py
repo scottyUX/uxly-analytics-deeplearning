@@ -17,8 +17,8 @@ class GraphBuilderTest():
         )
         self.__claimers = pd.read_csv(self.__path_provider[ck.CLAIMERS_PATH])
 
-    def __test_building_graph_with_limit_one(self, n: int = 5):
-        addresses = self.__claimers.iloc[:n][ck.WALLET_ADDRESS]
+    def __test_building_graph_with_limit_one(self, n: int = 3):
+        addresses = self.__claimers.iloc[2:3][ck.WALLET_ADDRESS]
         contract_addresses = ['0x4ed4e862860bed51a9570b96d89af5e1b0efefed']
         param1 = GraphQueryParameters(
             center_addresses=addresses.to_list(),
@@ -26,9 +26,9 @@ class GraphBuilderTest():
             contract_addresses=contract_addresses,
             from_date='2012-12-01T00:00:00Z',
             to_date='2024-06-01T00:00:00Z',
-            parent_depth=2,
-            child_depth=1,
-            edge_limit=-1,
+            parent_depth=5,
+            child_depth=5,
+            edge_limit=3,
             edge_order='DESC',
             )
         g = self.__builder.build_graph(param1)

@@ -19,6 +19,7 @@ class GraphBuilder():
         self.__controller = ChainQueryController(api_keys_path)
         self.__graph = Graph()
         self.__current_query_params = None
+        self.__current_hirerarchy_stack = []
 
     def __get_transactions_query_params(
             self,
@@ -40,6 +41,19 @@ class GraphBuilder():
         else:
             return sender_addresses
 
+    def __create_node(self, address: str, hirerarchy: int) -> Node:
+        if address in self.__graph:
+            return self.__graph.nodes[address]
+        node = Node(id=address, hirerarchy=hirerarchy)
+        self.__graph.add_node(node)
+        return node
+
+    def __check_indirect_node(self) -> bool:
+        if len(self.__current_hirerarchy_stack) < 3:
+            return False
+        return self.__current_hirerarchy_stack[-1] == \
+            self.__current_hirerarchy_stack[-3]
+
     def __get_parent_by_address(
             self, 
             address: str,
@@ -47,8 +61,9 @@ class GraphBuilder():
         ) -> Node:
         if address in self.__graph:
             return self.__graph.nodes[address]
-        elif parent_hirerarchy <= -self.__current_query_params.parent_depth:
-            return Node(id=address, hirerarchy=parent_hirerarchy)
+        elif self.__check_indirect_node() or \
+            parent_hirerarchy <= -self.__current_query_params.parent_depth:
+            return self.__create_node(address, parent_hirerarchy)
         else:
             return self.__query_node(address, parent_hirerarchy)
 
@@ -81,8 +96,9 @@ class GraphBuilder():
         ) -> Node:
         if address in self.__graph:
             return self.__graph.nodes[address]
-        elif child_hirerarchy >= self.__current_query_params.child_depth:
-            return Node(id=address, hirerarchy=child_hirerarchy)
+        elif self.__check_indirect_node() or \
+            child_hirerarchy >= self.__current_query_params.child_depth:
+            return self.__create_node(address, child_hirerarchy)
         else:
             return self.__query_node(address, child_hirerarchy)
 
@@ -99,6 +115,23 @@ class GraphBuilder():
             )
         return children_nodes
 
+    def __get_edge_from_transaction(
+            self, 
+            transaction: Token_Transfer,
+            source: Node,
+            destination: Node,
+        ) -> List[Edge]:
+            token_name = transaction.token_name
+            value = transaction.value
+            timestamp = transaction.block_timestamp
+            return Edge(
+                source=source,
+                destination=destination,
+                edge_type= token_name if token_name is not None else '',
+                edge_value= value if value is not None else 0,
+                edge_timestamp= timestamp if timestamp is not None else '',
+            )
+
     def __get_incoming_edges(
             self, 
             destination: Node,
@@ -108,13 +141,10 @@ class GraphBuilder():
         incoming_edges: List[Edge] = []
         for transaction in received_transactions:
             if transaction.from_address in parents:
-                token_name = transaction.token_name
-                edge = Edge(
-                    source=parents[transaction.from_address],
-                    destination=destination,
-                    edge_type= token_name if token_name else '',
-                    edge_value=transaction.value,
-                    edge_timestamp=transaction.block_timestamp,
+                edge = self.__get_edge_from_transaction(
+                    transaction,
+                    parents[transaction.from_address],
+                    destination,
                 )
                 incoming_edges.append(edge)
         return incoming_edges
@@ -128,12 +158,10 @@ class GraphBuilder():
         outgoing_edges: List[Edge] = []
         for transaction in sent_transactions:
             if transaction.to_address in children:
-                edge = Edge(
-                    source=source,
-                    destination=children[transaction.to_address],
-                    edge_type=transaction.token_name,
-                    edge_value=transaction.value,
-                    edge_timestamp=transaction.block_timestamp,
+                edge = self.__get_edge_from_transaction(
+                    transaction,
+                    source,
+                    children[transaction.to_address],
                 )
                 outgoing_edges.append(edge)
         return outgoing_edges
@@ -143,7 +171,8 @@ class GraphBuilder():
             history: TransactionHistory,
             hirerarchy: int,
         ) -> Node:
-        node = Node(id=history.address, hirerarchy=hirerarchy)
+        self.__current_hirerarchy_stack.append(hirerarchy)
+        node = self.__create_node(history.address, hirerarchy)
         sender_addresses = history.get_sender_addresses()
         parent_addresses = self.__get_parent_addresses(sender_addresses)
         parents = self.__get_parent_nodes(parent_addresses, hirerarchy)
@@ -156,6 +185,7 @@ class GraphBuilder():
         sent_tnxs = history.get_sent_transactions()
         outgoing = self.__get_outgoing_edges(node, childrens, sent_tnxs)
         node.add_outgoing_edges(outgoing)
+        self.__current_hirerarchy_stack.pop()
         return node
 
     def __query_node(
@@ -163,6 +193,8 @@ class GraphBuilder():
             address: str,
             hirerarchy: int,
         ) -> Node:
+        if  address in self.__graph:
+            return self.__graph.nodes[address]
         params = self.__get_transactions_query_params(
             address,
             self.__current_query_params,
