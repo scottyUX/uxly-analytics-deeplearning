@@ -35,6 +35,7 @@ class GraphBuilder():
             from_date=params.from_date,
             to_date=params.to_date,
             order=params.edge_order,
+            limit=params.edge_limit if params.edge_limit > 0 else 300,
         )
 
     def get_dex_addresses_from_csv(self,dex_addresses_path):

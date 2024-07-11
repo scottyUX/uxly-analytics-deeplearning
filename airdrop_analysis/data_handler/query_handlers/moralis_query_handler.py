@@ -45,6 +45,8 @@ class MoralisQueryHandler(object):
                 params.cursor = cursor
                 cnt = len(transactions)
                 s = f'Queryied {cnt} {event}s for {address}.'
+                if params.limit < 300:
+                    return transactions, params.cursor
                 if params.cursor is not None:
                     s += f' Querying next page...'
                 else:
