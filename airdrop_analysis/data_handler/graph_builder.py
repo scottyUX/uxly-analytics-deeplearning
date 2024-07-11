@@ -1,4 +1,5 @@
 from typing import List, Dict
+import pandas as pd
 
 from data_handler.query_handlers.chain_query_controller import \
     ChainQueryController
@@ -15,8 +16,9 @@ Edge.model_rebuild()
 Node.model_rebuild()
 
 class GraphBuilder():
-    def __init__(self, api_keys_path: str):
+    def __init__(self, api_keys_path: str, dex_addresses_path: str):
         self.__controller = ChainQueryController(api_keys_path)
+        self.__dex_addresses = self.get_dex_addresses_from_csv(dex_addresses_path)
         self.__graph = Graph()
         self.__current_query_params = None
         self.__current_hirerarchy_stack = []
@@ -35,6 +37,11 @@ class GraphBuilder():
             order=params.edge_order,
         )
 
+    def get_dex_addresses_from_csv(self,dex_addresses_path):
+        dex_info = pd.read_csv(dex_addresses_path)
+        dex_addresses = list(dex_info["addresses"])
+        return dex_addresses
+    
     def __get_parent_addresses(self, sender_addresses: List[str]) -> List[str]:
         if self.__current_query_params.edge_limit > 0:
             return sender_addresses[:self.__current_query_params.edge_limit]
@@ -62,7 +69,8 @@ class GraphBuilder():
         if address in self.__graph:
             return self.__graph.nodes[address]
         elif self.__check_indirect_node() or \
-            parent_hirerarchy <= -self.__current_query_params.parent_depth:
+            parent_hirerarchy <= -self.__current_query_params.parent_depth or \
+                address in self.__dex_addresses:
             return self.__create_node(address, parent_hirerarchy)
         else:
             return self.__query_node(address, parent_hirerarchy)
@@ -97,7 +105,8 @@ class GraphBuilder():
         if address in self.__graph:
             return self.__graph.nodes[address]
         elif self.__check_indirect_node() or \
-            child_hirerarchy >= self.__current_query_params.child_depth:
+            child_hirerarchy >= self.__current_query_params.child_depth or \
+                address in self.__dex_addresses:
             return self.__create_node(address, child_hirerarchy)
         else:
             return self.__query_node(address, child_hirerarchy)

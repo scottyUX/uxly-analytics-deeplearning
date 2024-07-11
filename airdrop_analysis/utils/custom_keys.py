@@ -5,6 +5,7 @@ class CustomKeys:
     AWS_ACCESS_KEYS_PATH = 'aws_access_keys_path'
     CLAIMERS_PATH = 'claimers_path'
     TABLES_FILE_PATH = 'tables_file_path'
+    DEX_ADDRESSES_PATH = 'dex_addresses_path'
 
     # API keys
     MORALIS = 'moralis'

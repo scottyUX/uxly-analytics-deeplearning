@@ -14,6 +14,7 @@ class GraphBuilderTest():
         self.__path_provider = PathProvider(paths_json_path, prefix_path)
         self.__builder = GraphBuilder(
             self.__path_provider.get_api_keys_path(),
+            self.__path_provider.get_dex_addresses_path()
         )
         self.__claimers = pd.read_csv(self.__path_provider[ck.CLAIMERS_PATH])
 

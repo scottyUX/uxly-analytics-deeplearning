@@ -50,3 +50,6 @@ class PathProvider(object):
             self[ck.GRAPH_HTMLS_FOLDER_PATH].replace('/', self.__sep), 
             graph_name + '.html',
         ])
+    
+    def get_dex_addresses_path(self):
+        return self[ck.DEX_ADDRESSES_PATH]
