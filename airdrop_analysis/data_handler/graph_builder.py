@@ -33,6 +33,7 @@ class GraphBuilder():
             from_date=params.from_date,
             to_date=params.to_date,
             order=params.edge_order,
+            limit=params.edge_limit if params.edge_limit > 0 else 300,
         )
 
     def __get_parent_addresses(self, sender_addresses: List[str]) -> List[str]:
