@@ -1,6 +1,5 @@
 import pandas as pd
 import json
-import os
 
 from data_handler.query_handlers.chain_query_controller \
     import ChainQueryController
@@ -14,9 +13,7 @@ from data_handler.models.base_models.query_parameters import *
 class ChainQueryControllerTest():
 
     def __init__(self):
-        paths_json_path = os.getenv(ck.PATHS_JSON_PATH)
-        prefix_path = os.getenv(ck.PREFIX_PATH)
-        self.__path_provider = PathProvider(paths_json_path, prefix_path)
+        self.__path_provider = PathProvider()
         self.__controller = ChainQueryController(
             self.__path_provider.get_api_keys_path(),
         )

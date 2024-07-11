@@ -1,5 +1,4 @@
 import pandas as pd
-import os
 
 from data_handler.graph_builder import GraphBuilder
 from data_handler.graph_visualizer import GraphVisualizer
@@ -12,14 +11,14 @@ from utils.custom_keys import CustomKeys as ck
 class GraphBuilderTest():
 
     def __init__(self):
-        paths_json_path = os.getenv(ck.PATHS_JSON_PATH)
-        prefix_path = os.getenv(ck.PREFIX_PATH)
-        self.__path_provider = PathProvider(paths_json_path, prefix_path)
+        self.__path_provider = PathProvider()
         self.__builder = GraphBuilder(
             self.__path_provider.get_api_keys_path(),
             self.__path_provider.get_dex_addresses_path()
         )
-        self.__claimers = pd.read_csv(self.__path_provider[ck.CLAIMERS_PATH])
+        self.__claimers = pd.read_csv(
+            self.__path_provider[ck.CLAIMERS_PATH],
+            )
 
     def __test_building_graph_with_limit_one(self, n: int = 1):
         addresses = self.__claimers.iloc[:n][ck.WALLET_ADDRESS]

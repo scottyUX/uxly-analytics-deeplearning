@@ -6,6 +6,7 @@ class CustomKeys:
     DATABASE_URL = 'database_url'
     API_KEYS_PATH = 'api_keys_path'
     AWS_ACCESS_KEYS_PATH = 'aws_access_keys_path'
+    CLAIMER_LISTS_JSON_PATH = 'claimer_lists_json_path'
     CLAIMERS_PATH = 'claimers_path'
     TABLES_FILE_PATH = 'tables_file_path'
     DEX_ADDRESSES_PATH = 'dex_addresses_path'
