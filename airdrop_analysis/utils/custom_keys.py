@@ -1,6 +1,9 @@
 
 class CustomKeys:
     # Paths
+    PATHS_JSON_PATH = 'paths_json_path'
+    PREFIX_PATH = 'prefix_path'
+    DATABASE_URL = 'database_url'
     API_KEYS_PATH = 'api_keys_path'
     AWS_ACCESS_KEYS_PATH = 'aws_access_keys_path'
     CLAIMERS_PATH = 'claimers_path'

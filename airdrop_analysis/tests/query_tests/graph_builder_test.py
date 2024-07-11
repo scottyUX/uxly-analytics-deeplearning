@@ -1,4 +1,5 @@
 import pandas as pd
+import os
 
 from data_handler.graph_builder import GraphBuilder
 from data_handler.graph_visualizer import GraphVisualizer
@@ -10,7 +11,9 @@ from utils.custom_keys import CustomKeys as ck
 
 class GraphBuilderTest():
 
-    def __init__(self, paths_json_path: str, prefix_path: str):
+    def __init__(self):
+        paths_json_path = os.getenv(ck.PATHS_JSON_PATH)
+        prefix_path = os.getenv(ck.PREFIX_PATH)
         self.__path_provider = PathProvider(paths_json_path, prefix_path)
         self.__builder = GraphBuilder(
             self.__path_provider.get_api_keys_path(),
@@ -27,9 +30,9 @@ class GraphBuilderTest():
             contract_addresses=contract_addresses,
             from_date='2012-12-01T00:00:00Z',
             to_date='2024-06-01T00:00:00Z',
-            parent_depth=5,
-            child_depth=5,
-            edge_limit=10,
+            parent_depth=2,
+            child_depth=2,
+            edge_limit=3,
             edge_order='DESC',
             )
         g = self.__builder.build_graph(param1)
