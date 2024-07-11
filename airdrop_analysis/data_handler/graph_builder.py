@@ -18,11 +18,16 @@ Node.model_rebuild()
 class GraphBuilder():
     def __init__(self, api_keys_path: str, dex_addresses_path: str):
         self.__controller = ChainQueryController(api_keys_path)
-        self.__dex_addresses = self.get_dex_addresses_from_csv(dex_addresses_path)
+        self.__get_dex_addresses_from_csv(dex_addresses_path)
         self.__graph = Graph()
         self.__current_query_params = None
         self.__current_hirerarchy_stack = []
 
+    def __get_dex_addresses_from_csv(self,dex_addresses_path):
+        dex_info = pd.read_csv(dex_addresses_path)
+        self.__dex_addresses = list(dex_info["addresses"])
+        return self.__dex_addresses
+    
     def __get_transactions_query_params(
             self,
             address: str,
@@ -38,11 +43,6 @@ class GraphBuilder():
             limit=params.edge_limit if params.edge_limit > 0 else 300,
         )
 
-    def get_dex_addresses_from_csv(self,dex_addresses_path):
-        dex_info = pd.read_csv(dex_addresses_path)
-        dex_addresses = list(dex_info["addresses"])
-        return dex_addresses
-    
     def __get_parent_addresses(self, sender_addresses: List[str]) -> List[str]:
         if self.__current_query_params.edge_limit > 0:
             return sender_addresses[:self.__current_query_params.edge_limit]
