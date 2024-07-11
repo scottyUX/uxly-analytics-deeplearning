@@ -77,6 +77,8 @@ class CustomKeys:
     POSSIBLE_SPAM = 'possible_spam'
     VALUE_DECIMAL = 'value_decimal'
     VERIFIED_CONTRACT = 'verified_contract'
+    ASC = 'ASC'
+    DESC = 'DESC'
 
     # DynamoDB
     ITEM = 'Item'

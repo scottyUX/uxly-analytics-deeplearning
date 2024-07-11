@@ -46,7 +46,11 @@ class GraphVisualizer:
         )
         plt.show()
 
-    def visualize_with_pyvis(self, html_file_path: str):
+    def visualize_with_pyvis(
+            self, 
+            html_file_path: str, 
+            show: bool = False,
+        ) -> str:
         net = Network(
             height='1000px', 
             width='100%', 
@@ -54,4 +58,6 @@ class GraphVisualizer:
         )
         net.from_nx(self.G)
         print()
-        net.show(html_file_path, notebook=False)
+        if show:
+            net.show(html_file_path, notebook=False)
+        return net.generate_html(html_file_path)

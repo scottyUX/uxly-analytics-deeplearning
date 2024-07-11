@@ -28,7 +28,7 @@ class ChainQueryControllerTest():
             address=address, 
             chain='base',
             cached_first=False,
-            from_date='2012-12-01T00:00:00Z',
+            from_date='2012-23-01T00:00:00Z',
             to_date='2024-06-01T00:00:00Z',
             )
         history, _ = self.__controller.get_wallet_token_transfer_history(prms1)
@@ -38,7 +38,7 @@ class ChainQueryControllerTest():
             address=address, 
             chain='base',
             cached_first=False,
-            from_date='2012-12-01T00:00:00Z',
+            from_date='2012-23-01T00:00:00Z',
             to_date='2024-06-01T00:00:00Z',
             contract_addresses=['0x9f07f8a82cb1af1466252e505b7b7ddee103bc91'],
             )

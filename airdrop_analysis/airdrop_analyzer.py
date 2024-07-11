@@ -16,7 +16,7 @@ class AirdropAnalyzer:
         )
         self.__list_provider = ClaimerListProvider()
 
-    def get_airdrop_graph(self, param: AirdropParameters):
+    def get_airdrop_graph(self, param: AirdropParameters) -> str:
         param.chain = self.__list_provider.get_token_chain(param.token)
         param.contract_addresses = \
             self.__list_provider.get_token_contract_addresses(param.token)
@@ -29,5 +29,5 @@ class AirdropAnalyzer:
         g = self.__builder.build_graph(param)
         g.remove_indirect_nodes()
         file_path = self.__path_provider.get_graph_html_path('test_graph')
-        GraphVisualizer(g).visualize_with_pyvis(file_path)
-        return g
+        html = GraphVisualizer(g).visualize_with_pyvis(file_path, show=False)
+        return html
