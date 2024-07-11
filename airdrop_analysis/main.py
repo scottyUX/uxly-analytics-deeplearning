@@ -17,13 +17,13 @@ def read_root():
     return {"Hello": "World"}
 
 @app.get("/graphs/{token}/{airdrop}/{season}")
-def read_item(
+def visualize_graph(
     token: str, 
     airdrop: str, 
     season: str,
     from_date: Optional[str] = '2023-12-01T00:00:00Z',
     to_date: Optional[str] = '2024-06-01T00:00:00Z',
-    claimers_limit: Optional[int] = 1,
+    claimers: Optional[int] = 1,
     parent_depth: Optional[int] = 2,
     child_depth: Optional[int] = 2,
     edge_limit: Optional[int] = 3,
@@ -35,7 +35,7 @@ def read_item(
         season=season,
         from_date=from_date,
         to_date=to_date,
-        claimer_limit=claimers_limit,
+        claimer_limit=claimers,
         parent_depth=parent_depth,
         child_depth=child_depth,  
         edge_limit=edge_limit,
