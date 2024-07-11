@@ -49,7 +49,7 @@ class GraphQueryParameters(BaseModel):
         return self.model_dump(exclude_unset=True)
 
 class AirdropParameters(GraphQueryParameters):
-    token: str
+    contract_address: str
     airdrop: str
     season: str
     claimer_limit: Optional[int] = -1

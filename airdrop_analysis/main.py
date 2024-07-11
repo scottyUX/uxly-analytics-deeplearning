@@ -16,9 +16,9 @@ AirdropAnalyzer()
 def read_root():
     return {"Hello": "World"}
 
-@app.get("/graphs/{token}/{airdrop}/{season}")
+@app.get("/graphs/{contract_address}/{airdrop}/{season}")
 def visualize_graph(
-    token: str, 
+    contract_address: str, 
     airdrop: str, 
     season: str,
     from_date: Optional[str] = '2023-12-01T00:00:00Z',
@@ -30,7 +30,7 @@ def visualize_graph(
     edge_order: Optional[str] = 'DESC',
     ) -> HTMLResponse:
     param = AirdropParameters(
-        token=token,
+        contract_address=contract_address,
         airdrop=airdrop,
         season=season,
         from_date=from_date,

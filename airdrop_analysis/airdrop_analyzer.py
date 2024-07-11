@@ -17,11 +17,10 @@ class AirdropAnalyzer:
         self.__list_provider = ClaimerListProvider()
 
     def get_airdrop_graph(self, param: AirdropParameters) -> str:
-        param.chain = self.__list_provider.get_token_chain(param.token)
-        param.contract_addresses = \
-            self.__list_provider.get_token_contract_addresses(param.token)
+        param.chain = self.__list_provider.get_token_chain(param.contract_address)
+        param.contract_addresses = [param.contract_address]
         param.center_addresses = self.__list_provider.get_claimers_list(
-                param.token, param.airdrop, param.season,
+                param.contract_address, param.airdrop, param.season,
         )
         if param.claimer_limit > 0:
             param.center_addresses = \
