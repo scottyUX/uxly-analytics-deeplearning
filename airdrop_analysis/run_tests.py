@@ -1,7 +1,7 @@
 from dotenv import load_dotenv
 load_dotenv()
 
-from tests.query_tests.chain_query_controller_test import ChainQueryControllerTest
+# from tests.query_tests.chain_query_controller_test import ChainQueryControllerTest
 from tests.query_tests.graph_builder_test import GraphBuilderTest
 
 

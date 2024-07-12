@@ -22,7 +22,9 @@ class Graph(BaseModel):
             return False
         self.__edges[edge.id] = edge
         self.add_node(edge.source)
+        self.nodes[edge.source.id].add_incoming_edge(edge)
         self.add_node(edge.destination)
+        self.nodes[edge.destination.id].add_outgoing_edge(edge)
         return True
 
     def add_edges(self, edges: List[Edge]):
@@ -34,6 +36,11 @@ class Graph(BaseModel):
             self.__nodes[node.id] = node
         self.add_edges(node.incoming_edges)
         self.add_edges(node.outgoing_edges)
+        for edge in self.edges.values():
+            if edge.source == node:
+                self.__nodes[node.id].add_outgoing_edge(edge)
+            elif edge.destination == node:
+                self.__nodes[node.id].add_incoming_edge(edge)
         return True
     
     def add_nodes(self, nodes: List[Node]):
@@ -49,7 +56,11 @@ class Graph(BaseModel):
             return False
         edge = self.__edges.pop(edge_id)
         edge.source.delete_edge(edge)
+        if len(edge.source.edges) == 0:
+            self.delete_node(edge.source)
         edge.destination.delete_edge(edge)
+        if len(edge.destination.edges) == 0:
+            self.delete_node(edge.destination)
         return True
 
     def delete_node(self, node: Union[Node, str]) -> bool:
@@ -85,6 +96,16 @@ class Graph(BaseModel):
     def remove_indirect_nodes(self):
         self.clear_children_from_rootless_parents()
         self.clear_parents_from_leaf_children()
+
+    def get_most_productive_parent(self, hirerarchy: int) -> Node:
+        most_productive = None
+        for node in self.__nodes.values():
+            if node.hirerarchy == hirerarchy:
+                if most_productive is None or \
+                    len(node.outgoing_edges) > \
+                        len(most_productive.outgoing_edges):
+                    most_productive = node
+        return most_productive
 
     def __contains__(self, node: Union[Node, str]) -> bool:
         if isinstance(node, str):
