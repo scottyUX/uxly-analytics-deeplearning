@@ -48,12 +48,11 @@ class GraphQueryParameters(BaseModel):
     def to_dict(self):
         return self.model_dump(exclude_unset=True)
 
-class AirdropParameters(GraphQueryParameters):
-    contract_address: str
+class ClaimersGraphParameters(GraphQueryParameters):
+    token: str
     airdrop: str
     season: str
     claimer_limit: Optional[int] = -1
     center_addresses: List[str] = []
     chain: str = ''
     contract_addresses: List[str] = []
-    

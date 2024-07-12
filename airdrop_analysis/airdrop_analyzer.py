@@ -3,7 +3,7 @@ import os
 from data_handler.claimers_list_provider import ClaimerListProvider
 from data_handler.graph_builder import GraphBuilder
 from data_handler.graph_visualizer import GraphVisualizer
-from data_handler.models.base_models.query_parameters import AirdropParameters
+from data_handler.models.base_models.query_parameters import ClaimersGraphParameters
 from utils.path_provider import PathProvider
 
 
@@ -16,11 +16,12 @@ class AirdropAnalyzer:
         )
         self.__list_provider = ClaimerListProvider()
 
-    def get_airdrop_graph(self, param: AirdropParameters) -> str:
-        param.chain = self.__list_provider.get_token_chain(param.contract_address)
-        param.contract_addresses = [param.contract_address]
+    def get_claimers_graph(self, param: ClaimersGraphParameters) -> str:
+        param.chain = self.__list_provider.get_token_chain(param.token)
+        param.contract_addresses = \
+            self.__list_provider.get_token_contract_addresses(param.token)
         param.center_addresses = self.__list_provider.get_claimers_list(
-                param.contract_address, param.airdrop, param.season,
+                param.token, param.airdrop, param.season,
         )
         if param.claimer_limit > 0:
             param.center_addresses = \

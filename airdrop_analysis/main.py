@@ -6,7 +6,7 @@ load_dotenv()
 
 from airdrop_analyzer import AirdropAnalyzer
 from data_handler.models.base_models.query_parameters import \
-    AirdropParameters
+    ClaimersGraphParameters
 
 
 app = FastAPI()
@@ -16,9 +16,9 @@ AirdropAnalyzer()
 def read_root():
     return {"Hello": "World"}
 
-@app.get("/graphs/{contract_address}/{airdrop}/{season}")
-def visualize_graph(
-    contract_address: str, 
+@app.get("/claimers_graph/{token}/{airdrop}/{season}")
+def visualize_claimers_graph(
+    token: str, 
     airdrop: str, 
     season: str,
     from_date: Optional[str] = '2023-12-01T00:00:00Z',
@@ -29,8 +29,8 @@ def visualize_graph(
     edge_limit: Optional[int] = 3,
     edge_order: Optional[str] = 'DESC',
     ) -> HTMLResponse:
-    param = AirdropParameters(
-        contract_address=contract_address,
+    param = ClaimersGraphParameters(
+        token=token,
         airdrop=airdrop,
         season=season,
         from_date=from_date,
@@ -41,5 +41,5 @@ def visualize_graph(
         edge_limit=edge_limit,
         edge_order=edge_order,
         )
-    graph = AirdropAnalyzer().get_airdrop_graph(param)
+    graph = AirdropAnalyzer().get_claimers_graph(param)
     return HTMLResponse(content=graph, status_code=200)
