@@ -228,6 +228,8 @@ class GraphBuilder():
         self.__current_query_params = params
         self.__graph = Graph()
         self.__query_nodes(params.center_addresses, 0)
+        for dex_address in self.__dex_addresses:
+            self.__graph.delete_node(dex_address)
         return self.__graph
     
     def build_graph_from_distributor(
