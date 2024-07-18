@@ -103,6 +103,7 @@ class MoralisQueryHandler(object):
         url_string = f"tkn={contract_addresses[0]}"
         for address in contract_addresses:
             url_string += f"%2c{address}"
+        return url_string
     
     def __create_scan_url(
         self,
@@ -121,7 +122,7 @@ class MoralisQueryHandler(object):
         except Exception:
             return ""
     
-    def query_total_transfer_count(
+    def query_total_token_transfer_count(
         self,
         params: TokenTransfersQueryParameters
         ):
@@ -129,7 +130,7 @@ class MoralisQueryHandler(object):
             url = self.__create_scan_url(params)
             session = HTMLSession()
             request = session.get(url)
-            count = request.html.search("A total of {} transactions found")
+            count = request.html.search("A total of {} transactions found")[0]
         except Exception:
             count = 0
         return count

@@ -60,8 +60,8 @@ class ChainQueryControllerTest():
                 address=address, 
                 chain='base',
                 cached_first=True,
-                from_date='2024-01-01T00:00:00Z',
-                to_date='2024-06-30T00:00:00Z',
+                from_date='2022-01-01T00:00:00Z',
+                to_date='2024-07-15T00:00:00Z',
                 contract_addresses=contract_addresses,
                 )
             history, _ = self.__controller.get_wallet_token_transfer_history(
@@ -77,7 +77,8 @@ class ChainQueryControllerTest():
                 address=address, 
                 chain='base',
                 cached_first=True,
-                from_date='2024-01-01T00:00:00Z',
+                from_date='2022-01-01T00:00:00Z',
+                to_date='2024-05-15T00:00:00Z',
                 contract_addresses=contract_addresses,
                 )
             count = self.__moralis_handler.query_total_token_transfer_count(params)
@@ -85,5 +86,5 @@ class ChainQueryControllerTest():
     
     def run_tests(self):
         # self.__test_query_wallet_token_transfers_with_contracts()
-        # self.__test_query_wallet_token_transfers()
-        self.__test_query_total_token_transfer_count()
+        self.__test_query_wallet_token_transfers()
+        # self.__test_query_total_token_transfer_count()

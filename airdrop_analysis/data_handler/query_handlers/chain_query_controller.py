@@ -76,10 +76,10 @@ class ChainQueryController():
                     cursor = record.last_cursor
                 transfers.extend(self.__database_handler.\
                     get_token_transfers_by_address(params.address))
-                # transfers.sort(
-                #     key=lambda transfer: 
-                #         datetime.strptime(transfer.block_timestamp,ck.DATETIME_FORMAT)
-                #         )
+                transfers.sort(
+                    key=lambda transfer: 
+                        datetime.strptime(transfer.block_timestamp,ck.DATETIME_FORMAT_FOR_QUERIED_TRANSFERS)
+                        )
                 if params.order == ck.DESC:
                     transfers.reverse()
         if transfers is None or len(transfers) == 0:
