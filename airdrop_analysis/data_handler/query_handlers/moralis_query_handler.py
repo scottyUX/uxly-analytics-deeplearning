@@ -1,8 +1,10 @@
 import json
 import moralis
+import os
+from requests_html import HTMLSession
 
 from data_handler.models.base_models.query_parameters \
-    import TransactionsQueryParameters
+    import TransactionsQueryParameters , TokenTransfersQueryParameters
 from data_handler.models.base_models.query_parameters \
     import StatsQueryParameters
 from utils.custom_keys import CustomKeys as ck
@@ -93,3 +95,41 @@ class MoralisQueryHandler(object):
             print(e)
             print(f'Error getting stats for {params.address}')
             return {}
+    
+    def __change_contract_addresses_to_url_string(
+        self,
+        contract_addresses: list[str]
+        ):
+        url_string = f"tkn={contract_addresses[0]}"
+        for address in contract_addresses:
+            url_string += f"%2c{address}"
+    
+    def __create_scan_url(
+        self,
+        params: TokenTransfersQueryParameters
+        ):
+        try:
+            primary_url = os.getenv(f"{params.chain.upper()}_URL")
+            url = primary_url
+            url += self.__change_contract_addresses_to_url_string(params.contract_addresses)
+            url += "&txntype=2"
+            url += f"&fadd={params.address}"
+            url += "&qt=2"
+            url += f"&tadd={params.address}"
+            url += f"&age={params.from_date}~{params.to_date}"
+            return url
+        except Exception:
+            return ""
+    
+    def query_total_transfer_count(
+        self,
+        params: TokenTransfersQueryParameters
+        ):
+        try:
+            url = self.__create_scan_url(params)
+            session = HTMLSession()
+            request = session.get(url)
+            count = request.html.search("A total of {} transactions found")
+        except Exception:
+            count = 0
+        return count

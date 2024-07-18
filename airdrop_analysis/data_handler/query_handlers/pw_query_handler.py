@@ -44,3 +44,9 @@ class PWQueryHandler(object):
             return Address_Record.get(Address_Record.address==address)
         except DoesNotExist:
             return None
+        
+    def update_address_record(self, address, data: dict[str, any]):
+        for key,value in data.items():
+            address_record = Address_Record.update({key: value}) \
+            .where(Address_Record.address == address)
+            address_record.execute()
