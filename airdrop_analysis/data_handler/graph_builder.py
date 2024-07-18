@@ -25,7 +25,7 @@ class GraphBuilder():
 
     def __get_dex_addresses_from_csv(self,dex_addresses_path):
         dex_info = pd.read_csv(dex_addresses_path)
-        self.__dex_addresses = list(dex_info["addresses"])
+        self.__dex_addresses = dex_info["addresses"].str.lower().to_list()
         return self.__dex_addresses
     
     def __get_transactions_query_params(
@@ -71,7 +71,7 @@ class GraphBuilder():
             return self.__graph.nodes[address]
         elif self.__check_indirect_node() or \
             parent_hirerarchy <= -self.__current_query_params.parent_depth or \
-                address in self.__dex_addresses:
+                address.lower() in self.__dex_addresses:
             return self.__create_node(address, parent_hirerarchy)
         else:
             return self.__query_node(address, parent_hirerarchy)
@@ -107,7 +107,7 @@ class GraphBuilder():
             return self.__graph.nodes[address]
         elif self.__check_indirect_node() or \
             child_hirerarchy >= self.__current_query_params.child_depth or \
-                address in self.__dex_addresses:
+                address.lower() in self.__dex_addresses:
             return self.__create_node(address, child_hirerarchy)
         else:
             return self.__query_node(address, child_hirerarchy)
@@ -228,4 +228,23 @@ class GraphBuilder():
         self.__current_query_params = params
         self.__graph = Graph()
         self.__query_nodes(params.center_addresses, 0)
+        for dex_address in self.__dex_addresses:
+            self.__graph.delete_node(dex_address)
         return self.__graph
+    
+    def build_graph_from_distributor(
+            self, 
+            params: GraphQueryParameters,
+        ) -> Graph:
+        hist_p = self.__get_transactions_query_params(
+            params.center_addresses[0],
+            params,
+        )
+        hist, _ = self.__controller.get_wallet_token_transfer_history(hist_p)
+        params.center_addresses = hist.get_receiver_addresses()
+        g = self.build_graph(params)
+        center = self.__get_node_from_transaction_history(hist, -1)
+        g.add_node(center)
+        for dex_address in self.__dex_addresses:
+            g.delete_node(dex_address)
+        return g

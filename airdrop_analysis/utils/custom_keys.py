@@ -1,8 +1,12 @@
 
 class CustomKeys:
     # Paths
+    PATHS_JSON_PATH = 'paths_json_path'
+    PREFIX_PATH = 'prefix_path'
+    DATABASE_URL = 'database_url'
     API_KEYS_PATH = 'api_keys_path'
     AWS_ACCESS_KEYS_PATH = 'aws_access_keys_path'
+    CLAIMER_LISTS_JSON_PATH = 'claimer_lists_json_path'
     CLAIMERS_PATH = 'claimers_path'
     TABLES_FILE_PATH = 'tables_file_path'
     DEX_ADDRESSES_PATH = 'dex_addresses_path'
@@ -77,6 +81,8 @@ class CustomKeys:
     POSSIBLE_SPAM = 'possible_spam'
     VALUE_DECIMAL = 'value_decimal'
     VERIFIED_CONTRACT = 'verified_contract'
+    ASC = 'ASC'
+    DESC = 'DESC'
 
     # DynamoDB
     ITEM = 'Item'
