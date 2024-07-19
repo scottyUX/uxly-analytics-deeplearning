@@ -44,11 +44,11 @@ class AirdropAnalyzer:
     def get_claimers_graph(self, param: ClaimersGraphParameters) -> str:
         param = self.__list_provider.adjust_params_for_claimer_list(param)
         graph = self.__builder.build_graph(param)
-        return self.get_graph_html(graph)
+        return self.get_graph_html(graph,with_partition=param.partition)
 
     def get_distribution_graph(self, param: GraphQueryParameters) -> str:
         graph = self.__builder.build_graph_from_distributor(param)
-        return self.get_graph_html(graph)
+        return self.get_graph_html(graph,with_partition=param.partition)
 
     def get_communities(self, param: GraphQueryParameters) -> dict:
         graph = self.__builder.build_graph_from_distributor(param)
