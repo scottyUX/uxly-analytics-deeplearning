@@ -1,5 +1,5 @@
 from typing import Optional, List
-from fastapi import FastAPI
+from fastapi import FastAPI, Query
 from fastapi.responses import HTMLResponse
 from dotenv import load_dotenv
 load_dotenv()
@@ -48,8 +48,8 @@ def visualize_claimers_graph(
 
 @app.get("/distribution_graph/")
 def visualize_distribution_graph(
-    distributor_address: str,
-    contract_address: str,
+    distributor_addresses: List[str] = Query(...),
+    contract_addresses: str = Query(...),
     chain: Optional[str] = 'base',
     from_date: Optional[str] = '2023-12-01T00:00:00Z',
     to_date: Optional[str] = '2024-06-01T00:00:00Z',
@@ -60,9 +60,9 @@ def visualize_distribution_graph(
     partition: Optional[bool] = False,
     ) -> HTMLResponse:
     param = GraphQueryParameters(
-        center_addresses=[distributor_address],
+        center_addresses=distributor_addresses,
         chain=chain,
-        contract_addresses=[contract_address],
+        contract_addresses=contract_addresses,
         from_date=from_date,
         to_date=to_date,
         parent_depth=parent_depth,
@@ -76,8 +76,8 @@ def visualize_distribution_graph(
 
 @app.get("/get_communities/")
 def get_communities(
-    distributor_address: str,
-    contract_address: str,
+    distributor_addresses: List[str] = Query(...),
+    contract_addresses: List[str] = Query(...),
     chain: Optional[str] = 'base',
     from_date: Optional[str] = '2023-12-01T00:00:00Z',
     to_date: Optional[str] = '2024-06-01T00:00:00Z',
@@ -87,9 +87,9 @@ def get_communities(
     edge_order: Optional[str] = 'DESC',
     ) -> dict:
     param = GraphQueryParameters(
-        center_addresses=[distributor_address],
+        center_addresses=distributor_addresses,
         chain=chain,
-        contract_addresses=[contract_address],
+        contract_addresses=contract_addresses,
         from_date=from_date,
         to_date=to_date,
         parent_depth=parent_depth,
