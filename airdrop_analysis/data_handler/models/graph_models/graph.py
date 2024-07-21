@@ -21,10 +21,10 @@ class Graph(BaseModel):
         if edge.id in self.__edges:
             return False
         self.__edges[edge.id] = edge
-        self.add_node(edge.source)
-        self.nodes[edge.source.id].add_incoming_edge(edge)
-        self.add_node(edge.destination)
-        self.nodes[edge.destination.id].add_outgoing_edge(edge)
+        if edge.destination.id not in self.__nodes:
+            self.add_node(edge.source)
+        if edge.destination.id not in self.__nodes:
+            self.add_node(edge.destination)
         return True
 
     def add_edges(self, edges: List[Edge]):

@@ -71,17 +71,17 @@ class GraphBuilderTest():
             contract_addresses=['0x4ed4e862860bed51a9570b96d89af5e1b0efefed'],
             from_date='2023-12-01T00:00:00Z',
             to_date='2024-06-01T00:00:00Z',
-            parent_depth=2,
-            child_depth=2,
-            edge_limit=5,
+            parent_depth=1,
+            child_depth=1,
+            edge_limit=-1,
             edge_order=ck.DESC,
-            partition=True,
+            partition=False,
         )
         g = self.__builder.build_graph_from_distributor(param)
         return self.__show_graph(g, with_partition=param.partition)
 
     def run_tests(self):
-        self.__test_building_graph_with_limit_one()
-        # self.__test_visualizing_distribution_graph()
+        # self.__test_building_graph_with_limit_one()
+        self.__test_visualizing_distribution_graph()
         return
 
