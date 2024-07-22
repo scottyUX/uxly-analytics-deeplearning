@@ -243,7 +243,7 @@ class GraphBuilder():
         hist, _ = self.__controller.get_wallet_token_transfer_history(hist_p)
         params.center_addresses = hist.get_receiver_addresses()
         g = self.build_graph(params)
-        center = self.__get_node_from_transaction_history(hist, -1)
+        center = self.__get_node_from_transaction_history(hist, 0)
         g.add_node(center)
         for dex_address in self.__dex_addresses:
             g.delete_node(dex_address)
