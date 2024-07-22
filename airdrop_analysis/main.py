@@ -116,3 +116,57 @@ async def get_communities(
     partition=True,
     )
     return AirdropAnalyzer().get_communities(param)
+
+@app.get("/distribution_graph_for_fast_api/")
+def visualize_distribution_graph(
+    distributor_addresses: List[str] = Query(...),
+    contract_addresses: str = Query(...),
+    chain: Optional[str] = 'base',
+    from_date: Optional[str] = '2023-12-01T00:00:00Z',
+    to_date: Optional[str] = '2024-06-01T00:00:00Z',
+    parent_depth: Optional[int] = 1,
+    child_depth: Optional[int] = 1,
+    edge_limit: Optional[int] = 1,
+    edge_order: Optional[str] = 'DESC',
+    partition: Optional[bool] = False,
+    ) -> HTMLResponse:
+    param = GraphQueryParameters(
+        center_addresses=distributor_addresses,
+        chain=chain,
+        contract_addresses=contract_addresses,
+        from_date=from_date,
+        to_date=to_date,
+        parent_depth=parent_depth,
+        child_depth=child_depth,  
+        edge_limit=edge_limit,
+        edge_order=edge_order,
+        partition=partition,
+        )
+    graph = AirdropAnalyzer().get_distribution_graph(param)
+    return HTMLResponse(content=graph, status_code=200)
+
+@app.get("/get_communities_for_fastapi/")
+def get_communities(
+    distributor_addresses: List[str] = Query(...),
+    contract_addresses: List[str] = Query(...),
+    chain: Optional[str] = 'base',
+    from_date: Optional[str] = '2023-12-01T00:00:00Z',
+    to_date: Optional[str] = '2024-06-01T00:00:00Z',
+    parent_depth: Optional[int] = 1,
+    child_depth: Optional[int] = 1,
+    edge_limit: Optional[int] = 1,
+    edge_order: Optional[str] = 'DESC',
+    ) -> dict:
+    param = GraphQueryParameters(
+        center_addresses=distributor_addresses,
+        chain=chain,
+        contract_addresses=contract_addresses,
+        from_date=from_date,
+        to_date=to_date,
+        parent_depth=parent_depth,
+        child_depth=child_depth,  
+        edge_limit=edge_limit,
+        edge_order=edge_order,
+        partition=True,
+        )
+    return AirdropAnalyzer().get_communities(param)
