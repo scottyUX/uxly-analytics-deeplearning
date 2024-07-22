@@ -52,7 +52,7 @@ class GraphBuilder():
     def __create_node(self, address: str, hirerarchy: int) -> Node:
         if address in self.__graph:
             return self.__graph.nodes[address]
-        node = Node(id=address, hirerarchy=hirerarchy)
+        node = Node(id=address, hierarchy=hirerarchy)
         self.__graph.add_node(node)
         return node
 

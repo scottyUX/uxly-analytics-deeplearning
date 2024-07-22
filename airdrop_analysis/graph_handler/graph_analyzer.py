@@ -11,11 +11,11 @@ class GraphAnalyzer(BaseModel):
     def get_hierarchy_groups(self):
         hierarchy_groups = {}
         for node in self.graph.nodes.values():
-            if node.hirerarchy not in hierarchy_groups:
-                hierarchy_groups[node.hirerarchy] = set()
-                hierarchy_groups[node.hirerarchy].add(node.id)
+            if node.hierarchy not in hierarchy_groups:
+                hierarchy_groups[node.hierarchy] = set()
+                hierarchy_groups[node.hierarchy].add(node.id)
             else:
-                hierarchy_groups[node.hirerarchy].add(node.id)
+                hierarchy_groups[node.hierarchy].add(node.id)
         return dict(sorted(hierarchy_groups.items(), key=lambda x: x[0]))
 
     def get_hierarchy_analysis(self):

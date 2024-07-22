@@ -7,13 +7,13 @@ if TYPE_CHECKING:
 
 class Node(BaseModel):
     id: str
-    hirerarchy: int
+    hierarchy: int
     __incoming_edges: Dict[str, 'Edge'] = {}
     __outgoing_edges: Dict[str, 'Edge'] = {}
 
     @property
     def label(self):
-        return self.id[-4:] + f' ({self.hirerarchy})'
+        return self.id[-4:] + f' ({self.hierarchy})'
 
     @property
     def incoming_edges(self):
@@ -89,7 +89,7 @@ class Node(BaseModel):
         raise ValueError(f'Cannot compare Node to {type(other)}')
 
     def __hash__(self):
-        return hash((self.id, self.hirerarchy))
+        return hash((self.id, self.hierarchy))
 
     def to_dict(self):
         return self.model_dump() 

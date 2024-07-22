@@ -78,7 +78,7 @@ class Graph(BaseModel):
     def clear_children_from_rootless_parents(self):
         nodes_to_delete = []
         for node in self.__nodes.values():
-            if node.hirerarchy > 0 and not node.incoming_edges:
+            if node.hierarchy > 0 and not node.incoming_edges:
                 nodes_to_delete.append(node)
         for node in nodes_to_delete:
             self.delete_node(node)
@@ -87,7 +87,7 @@ class Graph(BaseModel):
     def clear_parents_from_leaf_children(self):
         nodes_to_delete = []
         for node in self.__nodes.values():
-            if node.hirerarchy < 0 and not node.outgoing_edges:
+            if node.hierarchy < 0 and not node.outgoing_edges:
                 nodes_to_delete.append(node)
         for node in nodes_to_delete:
             self.delete_node(node)
@@ -100,7 +100,7 @@ class Graph(BaseModel):
     def get_most_productive_parent(self, hirerarchy: int) -> Node:
         most_productive = None
         for node in self.__nodes.values():
-            if node.hirerarchy == hirerarchy:
+            if node.hierarchy == hirerarchy:
                 if most_productive is None or \
                     len(node.outgoing_edges) > \
                         len(most_productive.outgoing_edges):
