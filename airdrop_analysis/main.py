@@ -1,17 +1,47 @@
 from typing import Optional, List
-from fastapi import FastAPI, Query
+import json
+from fastapi import FastAPI, HTTPException , Query , Request
 from fastapi.responses import HTMLResponse
+from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 load_dotenv()
 
 from airdrop_analyzer import AirdropAnalyzer
 from data_handler.models.base_models.query_parameters import \
     GraphQueryParameters, ClaimersGraphParameters
-
+from data_handler.models.query_models.community_query import CommunityQuery
+from data_handler.models.query_models.graph_query import GraphQuery
 
 app = FastAPI()
+
+origins = [
+    "http://localhost.tiangolo.com",
+    "https://localhost.tiangolo.com",
+    "http://localhost",
+    "http://localhost:8081",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 AirdropAnalyzer()
 
+async def get_data_from_request(request):
+    content_type = request.headers.get('Content-Type')
+    if content_type is None:
+        raise HTTPException(status_code=400, detail='No Content-Type provided')
+    elif content_type == 'application/json':
+        try:
+            return await request.json()
+        except json.JSONDecodeError:
+            raise HTTPException(status_code=400, detail='Invalid JSON data')
+    else:
+        raise HTTPException(status_code=400, detail='Content-Type not supported')
+    
 @app.get("/")
 def read_root():
     return {"Hello": "World"}
@@ -46,56 +76,43 @@ def visualize_claimers_graph(
     graph = AirdropAnalyzer().get_claimers_graph(param)
     return HTMLResponse(content=graph, status_code=200)
 
-@app.get("/distribution_graph/")
-def visualize_distribution_graph(
-    distributor_addresses: List[str] = Query(...),
-    contract_addresses: str = Query(...),
-    chain: Optional[str] = 'base',
-    from_date: Optional[str] = '2023-12-01T00:00:00Z',
-    to_date: Optional[str] = '2024-06-01T00:00:00Z',
-    parent_depth: Optional[int] = 1,
-    child_depth: Optional[int] = 1,
-    edge_limit: Optional[int] = 1,
-    edge_order: Optional[str] = 'DESC',
-    partition: Optional[bool] = False,
+@app.api_route("/distribution_graph/",methods=["GET","POST"])
+async def visualize_distribution_graph(
+    request: Request
     ) -> HTMLResponse:
+    data = await get_data_from_request(request)
+    query_data = GraphQuery.create_from_json(data)
     param = GraphQueryParameters(
-        center_addresses=distributor_addresses,
-        chain=chain,
-        contract_addresses=contract_addresses,
-        from_date=from_date,
-        to_date=to_date,
-        parent_depth=parent_depth,
-        child_depth=child_depth,  
-        edge_limit=edge_limit,
-        edge_order=edge_order,
-        partition=partition,
+        center_addresses=query_data.distributor_addresses,
+        chain=query_data.chain,
+        contract_addresses=query_data.contract_addresses,
+        from_date=query_data.from_date,
+        to_date=query_data.to_date,
+        parent_depth=query_data.parent_depth,
+        child_depth=query_data.child_depth,  
+        edge_limit=query_data.edge_limit,
+        edge_order=query_data.edge_order,
+        partition=query_data.partition,
         )
     graph = AirdropAnalyzer().get_distribution_graph(param)
     return HTMLResponse(content=graph, status_code=200)
 
-@app.get("/get_communities/")
-def get_communities(
-    distributor_addresses: List[str] = Query(...),
-    contract_addresses: List[str] = Query(...),
-    chain: Optional[str] = 'base',
-    from_date: Optional[str] = '2023-12-01T00:00:00Z',
-    to_date: Optional[str] = '2024-06-01T00:00:00Z',
-    parent_depth: Optional[int] = 1,
-    child_depth: Optional[int] = 1,
-    edge_limit: Optional[int] = 1,
-    edge_order: Optional[str] = 'DESC',
+@app.api_route("/get_communities/",methods=["GET","POST"])
+async def get_communities(
+    request: Request
     ) -> dict:
+    data = await get_data_from_request(request)
+    query_data = CommunityQuery.create_from_json(data)
     param = GraphQueryParameters(
-        center_addresses=distributor_addresses,
-        chain=chain,
-        contract_addresses=contract_addresses,
-        from_date=from_date,
-        to_date=to_date,
-        parent_depth=parent_depth,
-        child_depth=child_depth,  
-        edge_limit=edge_limit,
-        edge_order=edge_order,
-        partition=True,
-        )
+    center_addresses= query_data.distributor_addresses,
+    chain=query_data.chain,
+    contract_addresses=query_data.contract_addresses,
+    from_date=query_data.from_date,
+    to_date=query_data.to_date,
+    parent_depth=query_data.parent_depth,
+    child_depth=query_data.child_depth,  
+    edge_limit=query_data.edge_limit,
+    edge_order=query_data.edge_order,
+    partition=True,
+    )
     return AirdropAnalyzer().get_communities(param)

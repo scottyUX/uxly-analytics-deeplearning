@@ -33,8 +33,14 @@ class ChainQueryController():
         return transfers, cursor
 
     def compare_dates(self,date1_str: str,date2_str: str):
-        date1 = datetime.strptime(date1_str,ck.DATETIME_FORMAT)
-        date2 = datetime.strptime(date2_str,ck.DATETIME_FORMAT)
+        try:
+            date1 = datetime.strptime(date1_str,ck.DATETIME_FORMAT)
+        except ValueError:
+            date1 = datetime.strptime(date1_str,ck.DATETIME_FORMAT_FOR_QUERIED_TRANSFERS)
+        try:
+            date2 = datetime.strptime(date2_str,ck.DATETIME_FORMAT)
+        except ValueError:
+            date2 = datetime.strptime(date2_str,ck.DATETIME_FORMAT_FOR_QUERIED_TRANSFERS)
         return (date1-date2).total_seconds()
 
     def query_not_overlapped_transfers(
