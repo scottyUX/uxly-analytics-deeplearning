@@ -54,7 +54,7 @@ class GraphBuilder():
     def __create_node(self, address: str, hirerarchy: int) -> Node:
         if address in self.__graph:
             return self.__graph.nodes[address]
-        node = Node(id=address, hirerarchy=hirerarchy)
+        node = Node(id=address, hierarchy=hirerarchy)
         self.__graph.add_node(node)
         return node
 
@@ -245,7 +245,7 @@ class GraphBuilder():
         hist, _ = self.__controller.get_wallet_token_transfer_history(hist_p)
         params.center_addresses = hist.get_receiver_addresses()
         g = self.build_graph(params)
-        center = self.__get_node_from_transaction_history(hist, -1)
+        center = self.__get_node_from_transaction_history(hist, 0)
         g.add_node(center)
         for dex_address in self.__dex_addresses:
             g.delete_node(dex_address)

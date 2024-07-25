@@ -42,8 +42,8 @@ class NetworkXBuilder:
         for node in graph.nodes.values():
             nx_graph.add_node(
                 node.label, 
-                hirerarchy=node.hirerarchy,
-                color=self.__color_map[node.hirerarchy],
+                hirerarchy=node.hierarchy,
+                color=self.__color_map[node.hierarchy],
             )
         for edge in graph.edges.values():
             nx_graph.add_edge(
