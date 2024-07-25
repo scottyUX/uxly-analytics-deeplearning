@@ -34,6 +34,7 @@ class CustomKeys:
     ASC = 'ASC'
     DATETIME_FORMAT = '%Y-%m-%dT%H:%M:%SZ'
     DATETIME_FORMAT_FOR_QUERIED_TRANSFERS = '%Y-%m-%dT%H:%M:%S.%fZ'
+    GRAPH = 'graph'
 
     # Wallet stats
     NFTS = 'nfts'

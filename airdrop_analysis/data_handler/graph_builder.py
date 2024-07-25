@@ -2,6 +2,7 @@ import json
 from typing import List, Dict
 import pandas as pd
 
+from data_handler.networkx_builder import NetworkXBuilder
 from data_handler.query_handlers.chain_query_controller import \
     ChainQueryController
 from data_handler.models.base_models.transaction_history \
@@ -24,6 +25,7 @@ class GraphBuilder():
         self.__graph = Graph()
         self.__current_query_params = None
         self.__current_hirerarchy_stack = []
+        self.__nx_builder = NetworkXBuilder()
 
     def __get_dex_addresses_from_csv(self,dex_addresses_path):
         dex_info = pd.read_csv(dex_addresses_path)
@@ -262,7 +264,11 @@ class GraphBuilder():
         return self.__controller.save_graph_record(params.user_id,result_dict)
     
     def __get_result_dict(self, graph: Graph , params: GraphQueryParameters):
-        result_dict = graph.get_graph_dict()
+        communities = {}
+        if params.partition:
+            partition, _ = self.__nx_builder.get_louvain_partition(graph)
+            communities = self.get_communities_from_partition(partition)
+        result_dict = graph.get_graph_dict(communities)
         result_dict[ck.PARAMETERS] = self.__dict_to_json(params.to_dict())
         return result_dict
     
@@ -270,3 +276,15 @@ class GraphBuilder():
         dict_string = json.dumps(data)
         return json.loads(dict_string)
     
+    def get_communities_from_partition(self, partition: dict) -> dict:
+        communities: dict[str, list] = {}
+        for nodeID, communityID in partition.items():
+            if communityID not in communities:
+                communities[communityID] = []
+            communities[communityID].append(nodeID)
+        return communities
+
+    def get_communities(self, param: GraphQueryParameters) -> dict:
+        graph = self.build_graph_from_distributor(param)
+        partition, _ = self.__nx_builder.get_louvain_partition(graph)
+        return self.get_communities_from_partition(partition)

@@ -29,7 +29,7 @@ class ChainQueryController():
         record_list = []
         for graph in graph_records:
             record_dict = Graph_Record.to_dict(graph)
-            record_dict["graph"] = self.__read_graph_from_json(record_dict["graph"])
+            record_dict[ck.GRAPH] = self.__read_graph_from_json(record_dict[ck.GRAPH])
             record_string = json.dumps(record_dict)
             record_json = json.loads(record_string)
             record_list.append(record_json)
