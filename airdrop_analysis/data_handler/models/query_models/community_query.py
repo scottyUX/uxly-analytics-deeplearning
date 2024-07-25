@@ -12,6 +12,7 @@ class CommunityQuery(BaseModel):
     child_depth: Optional[int] = 1,
     edge_limit: Optional[int] = 1,
     edge_order: Optional[str] = 'DESC',
+    user_id: Optional[str] = ''
     
     def create_from_json(data):
         return CommunityQuery(
@@ -23,5 +24,6 @@ class CommunityQuery(BaseModel):
             parent_depth=data["parent_depth"],
             child_depth=data["child_depth"],
             edge_limit=data["edge_limit"],
-            edge_order=data["edge_order"]
+            edge_order=data["edge_order"],
+            user_id =data["user_id"]
         )

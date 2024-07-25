@@ -3,13 +3,13 @@ from peewee import DoesNotExist
 from data_handler.models.table_models.base_model import db
 from data_handler.models.table_models.address_record import Address_Record
 from data_handler.models.table_models.token_transfer import Token_Transfer
+from data_handler.models.table_models.graph_record import Graph_Record
 from data_handler.models.base_models.transaction_history \
     import TransactionHistory
 
-
 class PWQueryHandler(object):
     def __init__(self):
-        db.create_tables([Address_Record, Token_Transfer], safe=True)
+        db.create_tables([Address_Record, Token_Transfer, Graph_Record], safe=True)
 
     def create_wallet_token_transfers(self, chain: str, transfers: list):
         transfer_models = []
@@ -44,9 +44,16 @@ class PWQueryHandler(object):
             return Address_Record.get(Address_Record.address==address)
         except DoesNotExist:
             return None
+    
         
     def update_address_record(self, address, data: dict[str, any]):
         for key,value in data.items():
             address_record = Address_Record.update({key: value}) \
             .where(Address_Record.address == address)
             address_record.execute()
+    def create_graph_record(self, user_id : str, graph: dict):
+        return Graph_Record.create_from(user_id,graph)
+        
+    def get_graph_records(self,user_id : str):
+        return Graph_Record.select().where(Graph_Record.user_id==user_id)
+        

@@ -45,6 +45,7 @@ class GraphQueryParameters(BaseModel):
     edge_limit: Optional[int] = -1
     edge_order: Optional[str] = 'DESC'
     partition: Optional[bool] = False
+    user_id: Optional[str] = ""
 
     def to_dict(self):
         return self.model_dump(exclude_unset=True)

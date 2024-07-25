@@ -1,3 +1,4 @@
+import json
 from typing import List, Dict
 import pandas as pd
 
@@ -11,6 +12,7 @@ from data_handler.models.table_models.token_transfer import Token_Transfer
 from data_handler.models.graph_models.node import Node
 from data_handler.models.graph_models.edge import Edge
 from data_handler.models.graph_models.graph import Graph
+from utils.custom_keys import CustomKeys as ck
 
 Edge.model_rebuild()
 Node.model_rebuild()
@@ -247,4 +249,20 @@ class GraphBuilder():
         g.add_node(center)
         for dex_address in self.__dex_addresses:
             g.delete_node(dex_address)
+        self.__save_graph(g,params)
         return g
+    
+    def build_graph_json(self, params : GraphQueryParameters):
+        graph = self.build_graph_from_distributor(params)
+        return self.__save_graph(graph, params)
+    
+    def __save_graph(self, graph : Graph , params : GraphQueryParameters ,):
+        result_dict = graph.get_graph_dict()
+        result_dict[ck.PARAMETERS] = self.__dict_to_json(params.to_dict())
+        self.__controller.save_graph_record(params.user_id,result_dict)
+        return self.__dict_to_json(result_dict)
+    
+    def __dict_to_json(self,data):
+        dict_string = json.dumps(data)
+        return json.loads(dict_string)
+    

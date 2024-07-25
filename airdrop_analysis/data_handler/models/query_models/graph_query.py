@@ -4,6 +4,7 @@ from data_handler.models.query_models.community_query import CommunityQuery
 
 class GraphQuery(CommunityQuery):
     partition: Optional[bool]
+    user_id: Optional[str]
     
     def create_from_json(data):
         return GraphQuery(
@@ -16,5 +17,6 @@ class GraphQuery(CommunityQuery):
             child_depth=data["child_depth"],
             edge_limit=data["edge_limit"],
             edge_order=data["edge_order"],
-            partition=data["partition"]
+            partition=data["partition"],
+            user_id=data["user_id"]
         )

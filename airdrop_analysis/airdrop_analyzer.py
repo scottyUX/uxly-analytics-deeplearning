@@ -1,5 +1,7 @@
 from typing import Optional
+import json
 
+from data_handler.query_handlers.chain_query_controller import ChainQueryController
 from data_handler.claimer_list_provider import ClaimerListProvider
 from data_handler.graph_builder import GraphBuilder
 from data_handler.networkx_builder import NetworkXBuilder
@@ -7,6 +9,7 @@ from data_handler.models.base_models.query_parameters import \
     GraphQueryParameters, ClaimersGraphParameters
 from data_handler.models.graph_models.graph import Graph
 from utils.path_provider import PathProvider
+from utils.custom_keys import CustomKeys as ck
 
 
 class AirdropAnalyzer:
@@ -15,6 +18,9 @@ class AirdropAnalyzer:
         self.__builder = GraphBuilder(
             self.__path_provider.get_api_keys_path(),
             self.__path_provider.get_dex_addresses_path()
+        )
+        self.__controller = ChainQueryController(
+            self.__path_provider.get_api_keys_path()
         )
         self.__nx_builder = NetworkXBuilder()
         self.__list_provider = ClaimerListProvider()
@@ -49,6 +55,13 @@ class AirdropAnalyzer:
     def get_distribution_graph(self, param: GraphQueryParameters) -> str:
         graph = self.__builder.build_graph_from_distributor(param)
         return self.get_graph_html(graph,with_partition=param.partition)
+
+    def get_distribution_graph_json(self, param: GraphQueryParameters):
+        graph_json = self.__builder.build_graph_json(param)
+        return graph_json
+    
+    def get_graph_records_from_user_id(self,user_id: str):
+        return self.__controller.get_graph_records(user_id)
 
     def get_communities(self, param: GraphQueryParameters) -> dict:
         graph = self.__builder.build_graph_from_distributor(param)
