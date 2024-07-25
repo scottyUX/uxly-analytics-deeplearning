@@ -1,6 +1,8 @@
 from typing import Tuple
 from datetime import datetime
+import json
 
+from data_handler.models.table_models.graph_record import Graph_Record
 from data_handler.query_handlers.moralis_query_handler \
     import MoralisQueryHandler
 from data_handler.query_handlers.pw_query_handler import PWQueryHandler
@@ -18,6 +20,19 @@ class ChainQueryController():
 
     def get_address_record(self, address) -> Address_Record:
         return self.__database_handler.get_address_record(address)
+    
+    def save_graph_record(self,user_id : str, graph : dict):
+        return self.__database_handler.create_graph_record(user_id,graph)
+    
+    def get_graph_records(self,user_id : str):
+        graph_records = self.__database_handler.get_graph_records(user_id)
+        record_list = []
+        for graph in graph_records:
+            record_dict = Graph_Record.to_dict(graph)
+            record_string = json.dumps(record_dict)
+            record_json = json.loads(record_string)
+            record_list.append(record_json)
+        return record_list
 
     def __query_wallet_token_transfers(
             self,
@@ -33,8 +48,14 @@ class ChainQueryController():
         return transfers, cursor
 
     def compare_dates(self,date1_str: str,date2_str: str):
-        date1 = datetime.strptime(date1_str,ck.DATETIME_FORMAT)
-        date2 = datetime.strptime(date2_str,ck.DATETIME_FORMAT)
+        try:
+            date1 = datetime.strptime(date1_str,ck.DATETIME_FORMAT)
+        except ValueError:
+            date1 = datetime.strptime(date1_str,ck.DATETIME_FORMAT_FOR_QUERIED_TRANSFERS)
+        try:
+            date2 = datetime.strptime(date2_str,ck.DATETIME_FORMAT)
+        except ValueError:
+            date2 = datetime.strptime(date2_str,ck.DATETIME_FORMAT_FOR_QUERIED_TRANSFERS)
         return (date1-date2).total_seconds()
 
     def query_not_overlapped_transfers(

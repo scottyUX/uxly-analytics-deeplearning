@@ -96,3 +96,8 @@ class CustomKeys:
     # Airdrop tables
     AIRDROPS_DATABASE_PATH = 'airdrops_database_path'
     GRAPH_HTMLS_FOLDER_PATH = 'graph_htmls_folder_path'
+    
+    #Graph JSON Properties
+    NODES = 'nodes'
+    LINKS = 'links'
+    PARAMETERS = 'parameters'

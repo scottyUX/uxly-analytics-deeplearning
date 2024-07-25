@@ -3,6 +3,7 @@ from typing import Dict, List, Union
 
 from data_handler.models.graph_models.node import Node
 from data_handler.models.graph_models.edge import Edge
+from utils.custom_keys import CustomKeys as ck
 
 
 class Graph(BaseModel):
@@ -106,6 +107,18 @@ class Graph(BaseModel):
                         len(most_productive.outgoing_edges):
                     most_productive = node
         return most_productive
+
+    def get_graph_dict(self):
+        graph_dict = {}
+        graph_dict[ck.NODES] = []
+        graph_dict[ck.LINKS] = []
+        for node in self.__nodes.values():
+            node_dict = {"id" : node.id}
+            graph_dict[ck.NODES].append(node_dict)
+        for edge in self.__edges.values():
+            edge_dict = {"source" : edge.source.id , "target" : edge.destination.id}
+            graph_dict[ck.LINKS].append(edge_dict)
+        return graph_dict
 
     def __contains__(self, node: Union[Node, str]) -> bool:
         if isinstance(node, str):
