@@ -236,7 +236,7 @@ class GraphBuilder():
     
     def build_graph_from_distributor(
             self, 
-            params: GraphQueryParameters,
+            params: GraphQueryParameters, 
         ) -> Graph:
         hist_p = self.__get_transactions_query_params(
             params.center_addresses[0],
@@ -249,18 +249,22 @@ class GraphBuilder():
         g.add_node(center)
         for dex_address in self.__dex_addresses:
             g.delete_node(dex_address)
-        self.__save_graph(g,params)
+        result_dict = self.__get_result_dict(g,params)
+        self.__save_graph(result_dict,params)
         return g
     
     def build_graph_json(self, params : GraphQueryParameters):
         graph = self.build_graph_from_distributor(params)
-        return self.__save_graph(graph, params)
+        result_dict = self.__get_result_dict(graph,params)
+        return self.__dict_to_json(result_dict)
     
-    def __save_graph(self, graph : Graph , params : GraphQueryParameters ,):
+    def __save_graph(self, result_dict : dict, params: GraphQueryParameters):
+        return self.__controller.save_graph_record(params.user_id,result_dict)
+    
+    def __get_result_dict(self, graph: Graph , params: GraphQueryParameters):
         result_dict = graph.get_graph_dict()
         result_dict[ck.PARAMETERS] = self.__dict_to_json(params.to_dict())
-        self.__controller.save_graph_record(params.user_id,result_dict)
-        return self.__dict_to_json(result_dict)
+        return result_dict
     
     def __dict_to_json(self,data):
         dict_string = json.dumps(data)
