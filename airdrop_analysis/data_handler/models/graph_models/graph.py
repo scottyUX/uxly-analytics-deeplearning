@@ -1,7 +1,6 @@
 from pydantic import BaseModel
 from typing import Dict, List, Union
 
-from data_handler.models.base_models.query_parameters import GraphQueryParameters
 from data_handler.models.graph_models.node import Node
 from data_handler.models.graph_models.edge import Edge
 from utils.custom_keys import CustomKeys as ck
@@ -109,24 +108,23 @@ class Graph(BaseModel):
                     most_productive = node
         return most_productive
 
-    def get_graph_dict(self, communities : dict = {}):
+    def get_graph_dict(self):
         graph_dict = {}
         graph_dict[ck.NODES] = []
         graph_dict[ck.LINKS] = []
         for node in self.__nodes.values():
-            hierarchy = node.hierarchy
-            label = node.label
-            for key,community in communities.items():
-                if label in community:
-                    hierarchy = key
-                    break
-            node_dict = {"id" : node.id , "hierarchy" : hierarchy}
+            node_dict = {"id" : node.id}
             graph_dict[ck.NODES].append(node_dict)
         for edge in self.__edges.values():
             edge_dict = {"source" : edge.source.id , "target" : edge.destination.id}
             graph_dict[ck.LINKS].append(edge_dict)
         return graph_dict
 
+    def get_neighbors(self, node: Node) -> List[Node]:
+        inc_neighbors = [edge.source for edge in node.incoming_edges]
+        out_neighbors = [edge.destination for edge in node.outgoing_edges]
+        return inc_neighbors + out_neighbors
+    
     def __contains__(self, node: Union[Node, str]) -> bool:
         if isinstance(node, str):
             return node in self.__nodes

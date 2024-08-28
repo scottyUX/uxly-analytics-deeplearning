@@ -9,7 +9,7 @@ from data_handler.models.base_models.transaction_history \
     import TransactionHistory
 from data_handler.models.base_models.query_parameters import \
     TokenTransfersQueryParameters, GraphQueryParameters
-from data_handler.models.table_models.token_transfer import Token_Transfer
+from data_handler.models.odbc_models.token_transfer import Token_Transfer
 from data_handler.models.graph_models.node import Node
 from data_handler.models.graph_models.edge import Edge
 from data_handler.models.graph_models.graph import Graph
@@ -44,7 +44,7 @@ class GraphBuilder():
             from_date=params.from_date,
             to_date=params.to_date,
             order=params.edge_order,
-            limit=params.edge_limit if params.edge_limit > 0 else 300,
+            limit=params.edge_limit if params.edge_limit > 0 else 100,
         )
 
     def __get_parent_addresses(self, sender_addresses: List[str]) -> List[str]:
@@ -268,7 +268,7 @@ class GraphBuilder():
         if params.partition:
             partition, _ = self.__nx_builder.get_louvain_partition(graph)
             communities = self.get_communities_from_partition(partition)
-        result_dict = graph.get_graph_dict(communities)
+        result_dict = graph.get_graph_dict()
         result_dict[ck.PARAMETERS] = self.__dict_to_json(params.to_dict())
         return result_dict
     

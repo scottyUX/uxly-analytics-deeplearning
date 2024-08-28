@@ -85,6 +85,26 @@ class CustomKeys:
     VERIFIED_CONTRACT = 'verified_contract'
     ASC = 'ASC'
     DESC = 'DESC'
+    
+    # Graph Record
+    USER_ID = 'user_id'
+    TIME_STAMP = 'time_stamp'
+    GRAPH_PATH = 'graph_path'
+    
+    # Address Record
+    BALANCE = 'balance'
+    TOTAL_TRANSACTION_COUNT = 'total_transaction_count'
+    INCOMING_TRANSACTION_COUNT = 'incoming_transaction_count'
+    OUTGOING_TRANSACTION_COUNT = 'outgoing_transaction_count'
+    FIRST_INCOMING_TRANSACTION_DATE = 'first_incoming_transaction_date'
+    FIRST_INCOMING_TRANSACTION_SOURCE = 'first_incoming_transaction_source'
+    LAST_OUTGOING_TRANSACTION_DATE = 'last_outgoing_transaction_date'
+    LAST_OUTGOING_TRANSACTION_DESTINATION = 'last_outgoing_transaction_destination'
+    CONTRACT_ADDRESS = 'contract_address'
+    LAST_CURSOR = 'last_cursor'
+    
+    # Azure Database
+    ODBC_CONNECTION_STRING = 'odbc_connection_string'
 
     # DynamoDB
     ITEM = 'Item'

@@ -72,7 +72,8 @@ class ChainQueryControllerTest():
         length = len(TransactionTime.average_time)
         for i in TransactionTime.average_time:
             total_time += i
-        print(total_time/length)
+        if length > 0:
+            print(total_time/length)
             # print(history.get_transaction_count())
 
     def __test_query_total_token_transfer_count(self):

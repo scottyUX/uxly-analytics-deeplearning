@@ -65,6 +65,7 @@ class MoralisQueryHandler(object):
                 TransactionTime.average_time.append(difference / cnt)
         except Exception as e:
             if 'Reason: Internal Server Error' in str(e):
+                print(e)
                 print(f'Internal Server Error querying {event}s for {address}')
             else:
                 print(e)
